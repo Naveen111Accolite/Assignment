@@ -4,13 +4,15 @@ import { Turn15ClockContext } from "../context/Turn15ClockProvider";
 
 import { XandYValuesContext } from "../context/XandYValuesProvider";
 import BlockWithInput from "../blocks/BlockWithInput";
-import Tooltip from "../utils/Tooltip";
 
 // import Blockly from "blockly";
 
-export default function Sidebar({ dragDrop }) {
-  // let x = 0;
-  // let y = 0;
+export default function Sidebar({
+  dragDrop,
+  dragStart,
+  ParentIdSelector,
+  setParentIdSelector,
+}) {
   const [x, setX, y, setY] = useContext(XandYValuesContext);
 
   const [turn15, setTurn] = useContext(Turn15ClockContext);
@@ -59,27 +61,20 @@ export default function Sidebar({ dragDrop }) {
     ev.preventDefault();
   }
 
-  function dragStart(ev) {
-    ev.dataTransfer.setData("text", ev.target.id);
-    var data = ev.dataTransfer.getData("text");
-    // ev.target.appendChild(document.getElementById(data));
-    // alert('hello')
-  }
-
-  useEffect(() => {});
-
   return (
     <div
+      id="sidebar"
       onDrop={(event) => dragDrop(event)}
       onDragOver={(event) => allowDrop(event)}
-      className="w-60 flex-none h-full overflow-y-auto flex flex-col items-start p-2 border-r border-gray-200"
+      // onDragStart={(event) => dragStart(event)}
+      className="w-60 flex-none h-full overflow-y-auto flex flex-col items-start p-2 border-r border-gray-200 border-solid border-2 border-purple-900"
     >
       <div className="font-bold"> {"Events"} </div>
       <div
         draggable="true"
         id="when"
         onDragStart={(event) => dragStart(event)}
-        className="flex flex-row flex-wrap bg-yellow-500 text-white px-2 py-1 my-2 text-sm cursor-pointer"
+        className="flex flex-row flex-wrap bg-yellow-500 text-white px-2 py-1 my-2 text-sm cursor-pointer max-w-max rounded border-solid border-2 border-purple-900"
       >
         {"When "}
         <Icon name="flag" size={15} className="text-green-600 mx-2" />
@@ -90,7 +85,7 @@ export default function Sidebar({ dragDrop }) {
         id="this"
         onDragStart={(event) => dragStart(event)}
         // onDragOver={(event) => allowDrop(event)}
-        className="flex flex-row flex-wrap bg-yellow-500 text-white px-2 py-1 my-2 text-sm cursor-pointer"
+        className="flex flex-row flex-wrap bg-yellow-500 text-white px-2 py-1 my-2 text-sm cursor-pointer max-w-max rounded border-solid border-2 border-purple-900"
       >
         {"When this sprite clicked"}
       </div>
@@ -99,7 +94,7 @@ export default function Sidebar({ dragDrop }) {
         id="keyPress"
         onDragStart={(event) => dragStart(event)}
         // onDragOver={(event) => allowDrop(event)}
-        className="flex flex-row flex-wrap rounded bg-yellow-500 text-white px-2 py-1 my-2 text-sm cursor-pointer"
+        className="flex flex-row flex-wrap rounded bg-yellow-500 text-white px-2 py-1 my-2 text-sm cursor-pointer w-50 border-solid border-2 border-purple-900"
       >
         {"When  "}
         <select className="bg-yellow text-black rounded mx-2">
@@ -117,7 +112,7 @@ export default function Sidebar({ dragDrop }) {
           draggable="true"
           id="move10"
           onDragStart={(event) => dragStart(event)}
-          className="flex flex-row flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-sm cursor-pointer"
+          className="flex flex-row flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-sm cursor-pointer max-w-max rounded border-solid border-2 border-purple-900"
         >
           {"Move 10 steps"}
         </div>
@@ -125,7 +120,7 @@ export default function Sidebar({ dragDrop }) {
           draggable="true"
           id="turn15deganticlock"
           onDragStart={(event) => dragStart(event)}
-          className="flex flex-row flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-sm cursor-pointer"
+          className="flex flex-row flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-sm cursor-pointer max-w-max rounded border-solid border-2 border-purple-900"
         >
           {"Turn "}
           <Icon name="undo" size={15} className="text-white mx-2" />
@@ -135,7 +130,7 @@ export default function Sidebar({ dragDrop }) {
           draggable="true"
           id="turn15degclock"
           onDragStart={(event) => dragStart(event)}
-          className="flex flex-row flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-sm cursor-pointer"
+          className="flex flex-row flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-sm cursor-pointer max-w-max rounded border-solid border-2 border-purple-900"
         >
           {"Turn "}
           <Icon name="redo" size={15} className="text-white mx-2" />
@@ -335,12 +330,12 @@ export default function Sidebar({ dragDrop }) {
           dragStart={dragStart}
           color="green"
         ></BlockWithInput>
-        <BlockWithInput
+        {/* <BlockWithInput
           Id="reset"
           FirstField="Reset"
           dragStart={dragStart}
           color="green"
-        ></BlockWithInput>
+        ></BlockWithInput> */}
       </div>
       {/* Blockly library */}
       {/* <div id="toolbox" style={{ height: "200px", width: "200px" }}></div> */}

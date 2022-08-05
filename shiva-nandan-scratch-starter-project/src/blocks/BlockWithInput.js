@@ -19,7 +19,7 @@ function BlockWithInput({
       draggable="true"
       id={Id}
       onDragStart={(event) => dragStart(event)}
-      className={`flex flex-row flex-wrap bg-${color}-500 rounded text-white px-2 py-1 my-2 text-sm cursor-pointer`}
+      className={`flex flex-row flex-wrap bg-${color}-500 rounded text-white px-2 py-1 my-2 text-sm cursor-pointer  border-solid border-2 border-purple-900`}
     >
       {FirstField}
       {InputId && (
