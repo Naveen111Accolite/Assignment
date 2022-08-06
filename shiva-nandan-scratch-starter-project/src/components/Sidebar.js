@@ -107,236 +107,235 @@ export default function Sidebar({
       </div>
       <div className="font-bold ">
         {" "}
-        {/* */} {"Motion"}
-        <div
-          draggable="true"
-          id="move10"
-          onDragStart={(event) => dragStart(event)}
-          className="flex flex-row flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-sm cursor-pointer max-w-max rounded border-solid border-2 border-purple-900"
-        >
-          {"Move 10 steps"}
-        </div>
-        <div
-          draggable="true"
-          id="turn15deganticlock"
-          onDragStart={(event) => dragStart(event)}
-          className="flex flex-row flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-sm cursor-pointer max-w-max rounded border-solid border-2 border-purple-900"
-        >
-          {"Turn "}
-          <Icon name="undo" size={15} className="text-white mx-2" />
-          {"15 degrees"}
-        </div>
-        <div
-          draggable="true"
-          id="turn15degclock"
-          onDragStart={(event) => dragStart(event)}
-          className="flex flex-row flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-sm cursor-pointer max-w-max rounded border-solid border-2 border-purple-900"
-        >
-          {"Turn "}
-          <Icon name="redo" size={15} className="text-white mx-2" />
-          {"15 degrees"}
-        </div>
-        <BlockWithInput
-          Id="moveToRandomPos"
-          FirstField="Move to random position "
-          dragStart={dragStart}
-          color="blue"
-        ></BlockWithInput>
-        <BlockWithInput
-          Id="goto"
-          FirstField="Go to X:  "
-          InputId="gotoX"
-          value={x}
-          SecondField={" Y: "}
-          InputIdTwo={"gotoY"}
-          valueTwo={y}
-          dragStart={dragStart}
-          color="blue"
-        ></BlockWithInput>
-        <BlockWithInput
-          Id="glide"
-          FirstField="glide "
-          InputId="secs"
-          value={3}
-          SecondField={" secs to random position"}
-          dragStart={dragStart}
-          color="blue"
-        ></BlockWithInput>
-        <BlockWithInput
-          Id="glidetoXY"
-          FirstField="glide "
-          InputId="secsforXY"
-          value={3}
-          SecondField={"secs to X: "}
-          InputIdTwo={"glideX"}
-          valueTwo={x}
-          ThirdField={" Y: "}
-          InputId3={"glideY"}
-          valueThree={y}
-          dragStart={dragStart}
-          color="blue"
-        ></BlockWithInput>
-        <BlockWithInput
-          Id="pointToAngle"
-          FirstField="Point in direction"
-          InputId="pointToAngleInput"
-          value={turn15}
-          dragStart={dragStart}
-          color="blue"
-        ></BlockWithInput>
-        <BlockWithInput
-          Id="changeXby"
-          FirstField="Change X by"
-          InputId="Xby"
-          value={x}
-          dragStart={dragStart}
-          color="blue"
-        ></BlockWithInput>
-        <BlockWithInput
-          Id="setXTo"
-          FirstField="set X To:"
-          InputId="setXToValue"
-          value={x}
-          dragStart={dragStart}
-          color="blue"
-        ></BlockWithInput>
-        <BlockWithInput
-          Id="changeYby"
-          FirstField="Change Y by"
-          InputId="Yby"
-          value={y}
-          dragStart={dragStart}
-          color="blue"
-        ></BlockWithInput>
-        <BlockWithInput
-          Id="setYTo"
-          FirstField="set Y To:"
-          InputId="setYToValue"
-          value={y}
-          dragStart={dragStart}
-          color="blue"
-        ></BlockWithInput>
-        <BlockWithInput
-          Id="edgeBounce"
-          FirstField="if on edge bounce"
-          dragStart={dragStart}
-          color="blue"
-        ></BlockWithInput>
+        {/* */} {"Motion"}{" "}
       </div>
 
-      <div className="font-bold">
-        {" "}
-        {"Looks"}
-        <BlockWithInput
-          Id="sayHelloWithSecs"
-          FirstField="say"
-          InputId="sayHelloInput1"
-          value="Hello"
-          SecondField="for"
-          InputIdTwo="sayHellosecs"
-          valueTwo={3}
-          ThirdField="seconds"
-          // value={y}
-          dragStart={dragStart}
-          color="pink"
-        ></BlockWithInput>
-        <BlockWithInput
-          Id="sayHello"
-          FirstField="say"
-          InputId="sayHelloOnlyInput1"
-          value="Hi!"
-          dragStart={dragStart}
-          color="pink"
-        ></BlockWithInput>
-        <BlockWithInput
-          Id="changeSizeBy"
-          FirstField="change size by"
-          InputId="changeSizeByInput"
-          value={10}
-          dragStart={dragStart}
-          color="pink"
-        ></BlockWithInput>
-        <BlockWithInput
-          Id="setSizeTo"
-          FirstField="set size to"
-          InputId="setSizeToInput"
-          value={10}
-          SecondField="%"
-          dragStart={dragStart}
-          color="pink"
-        ></BlockWithInput>
-        <BlockWithInput
-          Id="changeColorEffectBy"
-          FirstField="change color effect by 25"
-          dragStart={dragStart}
-          color="pink"
-        ></BlockWithInput>
-        <BlockWithInput
-          Id="setColorEffectTo"
-          FirstField="set color effect to 0"
-          dragStart={dragStart}
-          color="pink"
-        ></BlockWithInput>
-        <BlockWithInput
-          Id="show"
-          FirstField="Show"
-          dragStart={dragStart}
-          color="pink"
-        ></BlockWithInput>
-        <BlockWithInput
-          Id="hide"
-          FirstField="Hide"
-          dragStart={dragStart}
-          color="pink"
-        ></BlockWithInput>
+      <div
+        draggable="true"
+        id="move10"
+        onDragStart={(event) => dragStart(event)}
+        className="flex flex-row flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-sm cursor-pointer max-w-max rounded border-solid border-2 border-purple-900"
+      >
+        {"Move 10 steps"}
       </div>
-      <div className="font-bold">
-        {" "}
-        {"Control"}
-        <BlockWithInput
-          Id="waitForSec"
-          FirstField="Wait for "
-          InputId="waitInput"
-          value={10}
-          SecondField="seconds before moving to random position"
-          dragStart={dragStart}
-          color="green"
-        ></BlockWithInput>
-        <BlockWithInput
-          Id="repeat"
-          FirstField="repeat "
-          InputId="repeatInput"
-          value={10}
-          SecondField=" random position"
-          dragStart={dragStart}
-          color="green"
-        ></BlockWithInput>
-        <BlockWithInput
-          Id="forever"
-          FirstField="forever "
-          SecondField="move to random position"
-          dragStart={dragStart}
-          color="green"
-        ></BlockWithInput>
-        <BlockWithInput
-          Id="ifElse"
-          FirstField="If Angle is below 90 degree then rotate 15 deg clockwise else move to random angle "
-          dragStart={dragStart}
-          color="green"
-        ></BlockWithInput>
-        <BlockWithInput
-          Id="createClone"
-          FirstField="Create own clone"
-          dragStart={dragStart}
-          color="green"
-        ></BlockWithInput>
-        {/* <BlockWithInput
+      <div
+        draggable="true"
+        id="turn15deganticlock"
+        onDragStart={(event) => dragStart(event)}
+        className="flex flex-row flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-sm cursor-pointer max-w-max rounded border-solid border-2 border-purple-900"
+      >
+        {"Turn "}
+        <Icon name="undo" size={15} className="text-white mx-2" />
+        {"15 degrees"}
+      </div>
+      <div
+        draggable="true"
+        id="turn15degclock"
+        onDragStart={(event) => dragStart(event)}
+        className="flex flex-row flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-sm cursor-pointer max-w-max rounded border-solid border-2 border-purple-900"
+      >
+        {"Turn "}
+        <Icon name="redo" size={15} className="text-white mx-2" />
+        {"15 degrees"}
+      </div>
+      <BlockWithInput
+        Id="moveToRandomPos"
+        FirstField="Move to random position "
+        dragStart={dragStart}
+        color="blue"
+      ></BlockWithInput>
+      <BlockWithInput
+        Id="goto"
+        FirstField="Go to X:  "
+        InputId="gotoX"
+        value={x}
+        SecondField={" Y: "}
+        InputIdTwo={"gotoY"}
+        valueTwo={y}
+        dragStart={dragStart}
+        color="blue"
+      ></BlockWithInput>
+      <BlockWithInput
+        Id="glide"
+        FirstField="glide "
+        InputId="secs"
+        value={3}
+        SecondField={" secs to random position"}
+        dragStart={dragStart}
+        color="blue"
+      ></BlockWithInput>
+      <BlockWithInput
+        Id="glidetoXY"
+        FirstField="glide "
+        InputId="secsforXY"
+        value={3}
+        SecondField={"secs to X: "}
+        InputIdTwo={"glideX"}
+        valueTwo={x}
+        ThirdField={" Y: "}
+        InputId3={"glideY"}
+        valueThree={y}
+        dragStart={dragStart}
+        color="blue"
+      ></BlockWithInput>
+      <BlockWithInput
+        Id="pointToAngle"
+        FirstField="Point in direction"
+        InputId="pointToAngleInput"
+        value={turn15}
+        dragStart={dragStart}
+        color="blue"
+      ></BlockWithInput>
+      <BlockWithInput
+        Id="changeXby"
+        FirstField="Change X by"
+        InputId="Xby"
+        value={x}
+        dragStart={dragStart}
+        color="blue"
+      ></BlockWithInput>
+      <BlockWithInput
+        Id="setXTo"
+        FirstField="set X To:"
+        InputId="setXToValue"
+        value={x}
+        dragStart={dragStart}
+        color="blue"
+      ></BlockWithInput>
+      <BlockWithInput
+        Id="changeYby"
+        FirstField="Change Y by"
+        InputId="Yby"
+        value={y}
+        dragStart={dragStart}
+        color="blue"
+      ></BlockWithInput>
+      <BlockWithInput
+        Id="setYTo"
+        FirstField="set Y To:"
+        InputId="setYToValue"
+        value={y}
+        dragStart={dragStart}
+        color="blue"
+      ></BlockWithInput>
+      <BlockWithInput
+        Id="edgeBounce"
+        FirstField="if on edge bounce"
+        dragStart={dragStart}
+        color="blue"
+      ></BlockWithInput>
+      {/* </div> */}
+
+      <div className="font-bold"> {"Looks"}</div>
+
+      <BlockWithInput
+        Id="sayHelloWithSecs"
+        FirstField="say"
+        InputId="sayHelloInput1"
+        value="Hello"
+        SecondField="for"
+        InputIdTwo="sayHellosecs"
+        valueTwo={3}
+        ThirdField="seconds"
+        // value={y}
+        dragStart={dragStart}
+        color="pink"
+      ></BlockWithInput>
+      <BlockWithInput
+        Id="sayHello"
+        FirstField="say"
+        InputId="sayHelloOnlyInput1"
+        value="Hi!"
+        dragStart={dragStart}
+        color="pink"
+      ></BlockWithInput>
+      <BlockWithInput
+        Id="changeSizeBy"
+        FirstField="change size by"
+        InputId="changeSizeByInput"
+        value={10}
+        dragStart={dragStart}
+        color="pink"
+      ></BlockWithInput>
+      <BlockWithInput
+        Id="setSizeTo"
+        FirstField="set size to"
+        InputId="setSizeToInput"
+        value={10}
+        SecondField="%"
+        dragStart={dragStart}
+        color="pink"
+      ></BlockWithInput>
+      <BlockWithInput
+        Id="changeColorEffectBy"
+        FirstField="change color effect by 25"
+        dragStart={dragStart}
+        color="pink"
+      ></BlockWithInput>
+      <BlockWithInput
+        Id="setColorEffectTo"
+        FirstField="set color effect to 0"
+        dragStart={dragStart}
+        color="pink"
+      ></BlockWithInput>
+      <BlockWithInput
+        Id="show"
+        FirstField="Show"
+        dragStart={dragStart}
+        color="pink"
+      ></BlockWithInput>
+      <BlockWithInput
+        Id="hide"
+        FirstField="Hide"
+        dragStart={dragStart}
+        color="pink"
+      ></BlockWithInput>
+      {/* </div> */}
+      <div className="font-bold"> {"Control"} </div>
+      <BlockWithInput
+        Id="waitForSec"
+        FirstField="Wait for "
+        InputId="waitInput"
+        value={10}
+        SecondField="seconds before moving to random position"
+        dragStart={dragStart}
+        color="green"
+      ></BlockWithInput>
+      <BlockWithInput
+        Id="repeat"
+        FirstField="repeat "
+        InputId="repeatInput"
+        value={10}
+        SecondField=" random position"
+        dragStart={dragStart}
+        color="green"
+      ></BlockWithInput>
+      <BlockWithInput
+        Id="forever"
+        FirstField="forever "
+        SecondField="move to random position"
+        dragStart={dragStart}
+        color="green"
+      ></BlockWithInput>
+      <BlockWithInput
+        Id="ifElse"
+        FirstField="If Angle is below 90 degree then rotate 15 deg clockwise else move to random angle "
+        dragStart={dragStart}
+        color="green"
+      ></BlockWithInput>
+      <BlockWithInput
+        Id="createClone"
+        FirstField="Create own clone"
+        dragStart={dragStart}
+        color="green"
+      ></BlockWithInput>
+      {/* <BlockWithInput
           Id="reset"
           FirstField="Reset"
           dragStart={dragStart}
           color="green"
         ></BlockWithInput> */}
-      </div>
+      {/* </div> */}
       {/* Blockly library */}
       {/* <div id="toolbox" style={{ height: "200px", width: "200px" }}></div> */}
     </div>

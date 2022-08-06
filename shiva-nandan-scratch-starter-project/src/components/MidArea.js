@@ -19,8 +19,6 @@ export default function MidArea({
   const [move10, setMove10] = useContext(Move10StpesContext);
   const [x, setX, y, setY] = useContext(XandYValuesContext);
 
-  const [dragFromMidArea, setDragFromMidArea] = useState(false);
-
   // const blocklyDiv = useRef("");
 
   // useEffect(() => {
@@ -34,17 +32,9 @@ export default function MidArea({
   //   workspace.addChangeListener(myUpdateFunction);
   // })
 
-  useEffect(() => {
-    console.log("dragFromMidArea", dragFromMidArea);
-  }, [dragFromMidArea]);
-
   function allowDrop(ev) {
     ev.preventDefault();
   }
-
-  useEffect(() => {
-    console.log("ParentIdSelector", ParentIdSelector);
-  }, [ParentIdSelector]);
 
   function drag(event) {
     event.preventDefault();
@@ -75,7 +65,6 @@ export default function MidArea({
           let parentId =
             ev.target.parentNode.getAttribute("data-parent-ts") ||
             ev.target.getAttribute("data-parent-ts");
-          let targetId = ev.target;
           // let getIds = document.querySelectorAll("#Parent > div");
           let getIds = document.querySelectorAll(
             `[data-parent-ts="${parentId}"] > div`
@@ -86,20 +75,23 @@ export default function MidArea({
             Ids.push(getIds[i]?.getAttribute("id"));
           }
 
-          const asyncLoop = async () => {
-            console.log(Date.now());
-            const start = Date.now();
-
+          (async function loop() {
             for (let i = 0; i < Ids.length; i++) {
-              const data = await switchFunc(Ids[i]);
-              console.log(Date.now() - start);
+              await new Promise((resolve) => {
+                setTimeout(() => {
+                  switchFunc(Ids[i]);
+                  resolve();
+                }, 1000);
+              });
             }
-          };
-
-          asyncLoop();
+          })();
         }
 
-        switchFunc(targetId);
+        if (
+          !(ev.target.parentNode.id == "Parent" || ev.target.id == "Parent")
+        ) {
+          switchFunc(targetId);
+        }
 
         function switchFunc(targetId) {
           switch (targetId) {
@@ -113,7 +105,6 @@ export default function MidArea({
             }
             case "turn15degclock": {
               setTurn((prev) => prev + 15);
-              console.log("helllooo turn");
               break;
             }
             case "move10": {
@@ -139,10 +130,8 @@ export default function MidArea({
             case "glide": {
               let glideValue = document.querySelector("#midarea #secs");
 
-              // svg.addEventListener("transitionstart", () => {});
               svg.style.transition = `all ${glideValue.value}s`;
               randomPos();
-              // console.log(glideValue.value, x, y, "glideValue");
 
               svg.addEventListener("transitionend", () => {
                 svg.style.transition = "none";
@@ -175,7 +164,6 @@ export default function MidArea({
                 "#midarea #pointToAngle input"
               );
               setTurn(parseInt(pointToDir.value));
-              // console.log(pointToDir.value);
               break;
             }
             case "changeXby": {
@@ -183,26 +171,22 @@ export default function MidArea({
               if (xByValue.value) {
                 setX((prev) => parseInt(prev) + parseInt(xByValue.value));
               }
-              // console.log(xByValue.value, "xByValue.value");
               break;
             }
             case "setXTo": {
               let setxByValue = document.querySelector("#midarea #setXToValue");
               setX(parseInt(setxByValue.value));
-              // console.log(setxByValue.value, "setxByValue");
               break;
             }
             case "changeYby": {
               let yByValue = document.querySelector("#midarea #Yby");
               setY((prev) => parseInt(prev) + parseInt(yByValue?.value));
 
-              // console.log(yByValue.value, "yByValue");
               break;
             }
             case "setYTo": {
               let setyByValue = document.querySelector("#midarea #setYToValue");
               setY(parseInt(setyByValue.value));
-              // console.log(setxByValue.value, "setxByValue");
               break;
             }
             case "edgeBounce": {
@@ -265,7 +249,6 @@ export default function MidArea({
               );
               svg1.setAttribute("viewBox", `${x} ${y} 100 100`);
 
-              console.log("changeSizeBy");
               break;
             }
             case "changeColorEffectBy": {
@@ -281,7 +264,6 @@ export default function MidArea({
                 "%) saturate(" +
                 changeColorEffectByValue * 10 * Math.random() +
                 "%)";
-              // console.log("changeColorEffectBy");
               break;
             }
             case "setColorEffectTo": {
@@ -290,7 +272,6 @@ export default function MidArea({
               );
               svg.style.filter =
                 "brightness(101.645%) contrast(122.62%) saturate(219.885%)";
-              // console.log("changeColorEffectBy");
               break;
             }
             case "setSizeTo": {
@@ -312,7 +293,6 @@ export default function MidArea({
                 );
               }
               svg1.setAttribute("viewBox", `${x} ${y} 100 100`);
-              // console.log("setSizeTo");
               break;
             }
             case "show": {
@@ -355,7 +335,6 @@ export default function MidArea({
             case "ifElse": {
               let ifElseElement = document.querySelector("#midarea #ifElse");
               let pointToDir = document.querySelector("#pointToAngle input");
-              console.log("turn15", pointToDir.value, turn15, x, y);
               if (pointToDir.value < 90) {
                 setTurn((prev) => prev + 15);
               } else {
@@ -411,7 +390,6 @@ export default function MidArea({
       let midareaKeypressBlock = document.querySelector(
         "#midarea #keyPress select"
       );
-      // console.log(midareaKeypressBlock.value, "midareaKeypressBlock");
       if (midareaKeypressBlock) {
         switch (e.key) {
           case midareaKeypressBlock.value: {

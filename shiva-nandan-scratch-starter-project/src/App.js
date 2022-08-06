@@ -8,12 +8,27 @@ export default function App() {
   const [spriteToggle, setSpriteToggle] = useState(true);
   const [ParentIdSelector, setParentIdSelector] = useState();
   const [selectedElementAttr, setSelectedElementAttr] = useState();
+  const [dragParent, setDragParent] = useState();
 
   function dragDrop2(ev) {
     ev.preventDefault();
+    //delete elements from midarea when dropped to sidebar section
     var data = ev.dataTransfer.getData("text").split(",");
+    var eleSelectedTodrop =
+      document.querySelector(`#midarea [data-ts="${data[1]}"]`) ||
+      document.querySelector(`#midarea [data-parent-ts="${dragParent}"]`);
+    // document.querySelector(`#midarea #${data[0]}`).remove();
+    if (eleSelectedTodrop) {
+      eleSelectedTodrop.remove();
+    }
 
-    document.querySelector(`#midarea #${data[0]}`).remove();
+    //remove parent element when directly dropped all children to drop/delete zone
+    let parentNode = document.getElementById("Parent");
+    if (parentNode) {
+      if (parentNode.childNodes.length == 0) {
+        parentNode.remove();
+      }
+    }
   }
 
   let sidebar = document.getElementById("sidebar");
@@ -33,40 +48,28 @@ export default function App() {
         let targetEle = e.target;
         setParentIdSelector(e.target.parentNode.id);
         setSelectedElementAttr(targetEle.getAttribute("data-ts"));
-        console.log(
-          "ev.target.parentNode.id",
-          e.target.parentNode.id,
-          targetEle.getAttribute("data-ts")
-        );
       });
     }
-
-    // return () => {
-    //   sidebar.removeEventListener("mousedown", (e) => {
-    //     setParentIdSelector(ev.target.parentNode.id);
-    //   });
-    // };
   });
 
   let onDragStart = function (ev) {
     // ev.preventDefault();
     let targetElement = ev.target;
     const rect = ev.target.getBoundingClientRect();
+    console.log("targetElement", targetElement, rect.left, rect.top);
 
+    if (targetElement.getAttribute("data-parent-ts")) {
+      setDragParent(targetElement.getAttribute("data-parent-ts"));
+    }
     if (ParentIdSelector == "midarea") {
       let timestamp = targetElement.getAttribute("data-ts");
       let myData = targetElement.id + "," + timestamp;
       ev.dataTransfer.setData("text", myData);
-
-      targetElement.setAttribute("data-ts", timestamp);
-      // setParentIdSelector(ev.target.parentNode.id);
-      console.log("myData", myData);
       return;
     }
     let timestamp = Date.now();
 
     let myData = targetElement.id + "," + timestamp;
-    console.log("drag-data", myData);
     ev.dataTransfer.setData("text", myData);
     targetElement.setAttribute("data-ts", timestamp);
     setParentIdSelector(ev.target.parentNode.id);
@@ -74,7 +77,6 @@ export default function App() {
 
   useEffect(() => {
     let parentElements = document.querySelectorAll("#Parent");
-    console.log("parentElements", parentElements);
     if (parentElements) {
       for (let i = 0; i <= parentElements.length; i++) {
         parentElements[i]?.setAttribute("draggable", true);
@@ -102,19 +104,24 @@ export default function App() {
     e.preventDefault();
 
     var data = e.dataTransfer.getData("text").split(",");
+    var parentData = e.target.getAttribute("data-parent-ts");
+
     // let eleSelected = document.querySelector(`#midarea #${data[0]}`);
-    let eleSelected = document.querySelector(`#midarea [data-ts="${data[1]}"]`);
+    let eleSelected =
+      document.querySelector(`#midarea [data-ts="${data[1]}"]`) ||
+      document.querySelector(`[data-parent-ts="${dragParent}"]`);
     // ||
     // document.querySelector(`#midarea [data-parent-ts="${data[1]}"]`);
     var rect = e.target.getBoundingClientRect();
     const coordinates = [e.pageX - rect.left, e.pageY - rect.top];
 
-    console.log(
-      "eleSelected",
-      eleSelected,
-      // document.getAttribute("data-parent-ts"),
-      e.currentTarget.getAttribute("data-parent-ts")
-    );
+    if (eleSelected) {
+      var dropValues = eleSelected.getBoundingClientRect();
+    }
+
+    if (e.target.parentNode.id == "sidebar") {
+      console.log("dropeedddddddd");
+    }
 
     if (ParentIdSelector == "midarea" || ParentIdSelector == "Parent") {
       // e.target.appendChild(document.querySelector(`#midarea #${data}`));
@@ -124,19 +131,27 @@ export default function App() {
           eleSelected.style.left = e.clientX - 240 + "px";
           eleSelected.style.top = e.clientY + "px";
           document.getElementById("midarea").appendChild(eleSelected);
-          console.log("parentselecttttt");
         }
-        if (ParentIdSelector == "Parent" && e.target.id == "midarea") {
-          console.log(
-            "parent and midareassssss",
-            eleSelected.offsetWidth,
-            eleSelected.offsetHeight
-          );
-        }
+        // if (ParentIdSelector == "Parent" && e.target.id == "midarea") {
+        //   console.log(
+        //     "parent and midareassssss",
+        //     eleSelected.offsetWidth,
+        //     eleSelected.offsetHeight
+        //   );
+        //   eleSelected.style.position = "absolute";
+
+        //   eleSelected.style.left =
+        //     e.clientX - eleSelected.offsetWidth / 2 + "px";
+        //   eleSelected.style.top =
+        //     e.clientY - aeleSelected.offsetHeight / 2 + "px";
+        // }
         // eleSelected.style.position = "absolute";
         // eleSelected.style.left = coordinates[0] + 240 + "px";
         // eleSelected.style.top = coordinates[1] + "px";
-        if (ParentIdSelector == "midarea" && e.target.id == "midarea") {
+        if (
+          (ParentIdSelector == "midarea" && e.target.id == "midarea") ||
+          (ParentIdSelector == "Parent" && e.target.id == "midarea")
+        ) {
           eleSelected.style.position = "absolute";
 
           eleSelected.style.left =
@@ -146,7 +161,6 @@ export default function App() {
         }
       }
     } else {
-      console.log("e.target.id-else", e.target.id);
       if (
         e.target.id == "midarea" &&
         ParentIdSelector != "midarea" &&
@@ -159,7 +173,6 @@ export default function App() {
         clone.style.position = "absolute";
         clone.style.left = e.clientX - 70 + "px";
         clone.style.top = e.clientY - clone.offsetHeight / 2 + "px";
-        console.log(clone, clone.offsetWidth, "clone");
         e.target.appendChild(clone);
       }
     }
@@ -167,7 +180,6 @@ export default function App() {
     let parentNode = document.getElementById("Parent");
 
     if (parentNode) {
-      console.log("parentnode", parentNode, parentNode.childNodes.length);
       if (parentNode.childNodes.length == 0) {
         parentNode.remove();
         console.log("No children");
@@ -180,6 +192,7 @@ export default function App() {
       // alert("hello");
       const targetEle = document.querySelector(`#midarea #${e.target.id}`);
       // const droppedEle = document.getElementById(data[0]).cloneNode(true);
+
       if (ParentIdSelector == "midarea") {
         var droppedEle = document.querySelector(
           `#midarea [data-ts="${data[1]}"]`
@@ -190,12 +203,13 @@ export default function App() {
         e.target.parentNode.id == "Parent"
       ) {
         var droppedEle = document.querySelector(`[data-ts="${data[1]}"]`);
-        console.log("both parettttt");
+      } else if (ParentIdSelector == "Parent" && e.target.id == "Parent") {
+        var droppedEle = document.querySelector(`[data-ts="${data[1]}"]`);
       } else {
         var droppedEle = document
           .querySelector(`[data-ts="${data[1]}"]`)
           .cloneNode(true);
-        console.log("dropped midarea nottt cloneee");
+        console.log("dropped midarea cloneee");
       }
 
       function snapElements() {
@@ -205,13 +219,14 @@ export default function App() {
         createEle.setAttribute("id", "Parent");
         createEle.setAttribute("data-parent-ts", timestampParent);
         createEle.style.position = "absolute";
-        createEle.style.left = e.clientX - createEle?.offsetWidth + "px";
-        createEle.style.top = e.clientY - createEle?.offsetHeight + "px";
+        createEle.style.left = e.clientX - 60 - createEle?.offsetWidth + "px";
+        createEle.style.top = e.clientY - 30 - createEle?.offsetHeight + "px";
         midarea.appendChild(createEle);
         createEle.appendChild(targetEle);
         // console.log(
         //   "snapelement",
         //   e.clientX,
+        //   e.clientY,
         //   createEle?.offsetWidth,
         //   // e.offsetY,
         //   createEle?.offsetHeight,
@@ -219,24 +234,28 @@ export default function App() {
         //   e.clientY - createEle?.offsetHeight
         // );
       }
-      // droppedEle.style.position = "absolute";
 
       if (!(e.target.parentNode.id == "Parent" || e.target.id == "Parent")) {
         snapElements();
       }
 
-      targetEle.style.position = "relative";
-      targetEle.style.left = "0px";
-      targetEle.style.top = "0px";
-      targetEle.style.margin = "0px 0px";
-      // targetEle.style.position = "relative";
+      if (!(e.target.id == "Parent")) {
+        targetEle.style.position = "relative";
+        targetEle.style.left = "0px";
+        targetEle.style.top = "0px";
+        targetEle.style.margin = "0px 0px";
+      }
+
       droppedEle.style.position = "relative";
       droppedEle.style.left = "0px";
-
       droppedEle.style.top = "0px";
       droppedEle.style.margin = "0px 0px";
 
-      targetEle.after(droppedEle);
+      if (e.target.id == "Parent") {
+        targetEle.insertAdjacentElement("beforeend", droppedEle);
+      } else {
+        targetEle.after(droppedEle);
+      }
     }
   }
 

@@ -78,12 +78,7 @@ export default function PreviewArea({
       // console.log(svg, "svg");
       var selectedElement, offset;
       function startDrag(evt) {
-        // if (evt.target.classList.contains("draggable")) {
         selectedElement = evt.target;
-        // offset = getMousePosition(evt);
-        // offset.x -= parseFloat(selectedElement.getAttributeNS(null, "x"));
-        // offset.y -= parseFloat(selectedElement.getAttributeNS(null, "y"));
-        // }
       }
       async function drag(evt) {
         if (selectedElement) {
@@ -103,33 +98,6 @@ export default function PreviewArea({
         };
       }
     }
-
-    // function addListeners() {
-    //   spriteSvg.addEventListener("mousedown", mouseDown, false);
-    //   window.addEventListener("mouseup", mouseUp, false);
-    // }
-
-    // function mouseUp() {
-    //   window.removeEventListener("mousemove", divMove, true);
-    // }
-
-    // function mouseDown(e) {
-    //   window.addEventListener("mousemove", divMove, true);
-    // }
-
-    // function divMove(e) {
-    //   // var div = document.getElementById('dxy');
-    //   // spriteSvg.style.position = 'absolute';
-    //   // spriteSvg.style.top = e.clientY + 'px';
-    //   // spriteSvg.style.left = e.clientX + 'px';
-    //   var mysprite = document.getElementById("mysprite");
-
-    //   var iconPos = mysprite.getBoundingClientRect();
-    //   let previewarea = document.getElementById("sprite");
-    //   console.log(iconPos, "previewarea");
-    //   // setX(e.clientX);
-    //   // setY(e.clientY);
-    // }
   });
 
   useEffect(() => {
