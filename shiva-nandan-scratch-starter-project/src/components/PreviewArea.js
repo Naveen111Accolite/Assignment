@@ -12,6 +12,7 @@ export default function PreviewArea({
   spriteToggle,
   setSpriteToggle,
   dragStart,
+  dragDrop,
 }) {
   const [turn15, setTurn] = useContext(Turn15ClockContext);
   const [move10, setMove10] = useContext(Move10StpesContext);
@@ -56,66 +57,69 @@ export default function PreviewArea({
     }
   });
 
-  useEffect(() => {
-    // window.onload = addListeners;
+  // useEffect(() => {
+  //   // window.onload = addListeners;
 
-    const spriteSvg = document.querySelector("#sprite > svg");
-    if (spriteSvg) {
-      spriteSvg.addEventListener("mousedown", (evt) => {
-        spriteSvg.style.cursor = "move";
-        spriteSvg.classList.add("draggable");
-        makeDraggable(evt);
-      });
-    }
+  //   const spriteSvg = document.querySelector("#sprite > svg");
+  //   if (spriteSvg) {
+  //     spriteSvg.addEventListener("mousedown", (evt) => {
+  //       spriteSvg.style.cursor = "move";
+  //       spriteSvg.classList.add("draggable");
+  //       makeDraggable(evt);
+  //     });
+  //   }
 
-    var selectedElement = false;
-    function makeDraggable(evt) {
-      var svg = evt.target;
-      svg.addEventListener("mousedown", startDrag);
-      svg.addEventListener("mousemove", drag);
-      svg.addEventListener("mouseup", endDrag);
-      svg.addEventListener("mouseleave", endDrag);
-      // console.log(svg, "svg");
-      var selectedElement, offset;
-      function startDrag(evt) {
-        selectedElement = evt.target;
-      }
-      async function drag(evt) {
-        if (selectedElement) {
-          evt.preventDefault();
-          var coordVal = await getMousePosition(evt);
-          setCoord(coordVal);
-        }
-      }
-      function endDrag(evt) {
-        console.log("end dragg");
-        selectedElement = null;
-      }
-      function getMousePosition(evt) {
-        return {
-          x: evt.offsetX,
-          y: evt.offsetY,
-        };
-      }
-    }
-  });
+  //   var selectedElement = false;
+  //   function makeDraggable(evt) {
+  //     var svg = evt.target;
+  //     svg.addEventListener("mousedown", startDrag);
+  //     svg.addEventListener("mousemove", drag);
+  //     svg.addEventListener("mouseup", endDrag);
+  //     svg.addEventListener("mouseleave", endDrag);
+  //     // console.log(svg, "svg");
+  //     var selectedElement, offset;
+  //     function startDrag(evt) {
+  //       selectedElement = evt.target;
+  //     }
+  //     async function drag(evt) {
+  //       if (selectedElement) {
+  //         evt.preventDefault();
+  //         var coordVal = await getMousePosition(evt);
+  //         setCoord(coordVal);
+  //       }
+  //     }
+  //     function endDrag(evt) {
+  //       console.log("end dragg");
+  //       selectedElement = null;
+  //     }
+  //     function getMousePosition(evt) {
+  //       return {
+  //         x: evt.offsetX,
+  //         y: evt.offsetY,
+  //       };
+  //     }
+  //   }
+  // });
 
-  useEffect(() => {
-    setX(coord.x);
-    setY(coord.y);
-    console.log(coord);
-  }, [coord]);
+  // useEffect(() => {
+  //   setX(coord.x);
+  //   setY(coord.y);
+  //   console.log(coord);
+  // }, [coord]);
+
+  let selectedSVGElement = spriteToggle ? <CatSprite /> : <BananaSprite />;
 
   return (
     <div
       onDrop={(event) => dragDrop(event)}
-      onDragOver={(event) => allowDrop(event)}
-      onDrag={(event) => dragStart(event)}
+      // onDragOver={(event) => allowDrop(event)}
+      onDragStart={(event) => dragStart(event)}
       id="sprite"
-      className="flex-none h-full w-full overflow-y-auto p-2 "
+      className="flex-none h-2/3 w-full overflow-y-auto p-2 "
     >
       {/* <div> */}
-      {spriteToggle ? <CatSprite /> : <BananaSprite />}
+      {/* {spriteToggle ? <CatSprite /> : <BananaSprite />} */}
+      {selectedSVGElement}
     </div>
   );
 }

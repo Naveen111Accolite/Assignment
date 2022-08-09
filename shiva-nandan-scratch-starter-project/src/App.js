@@ -172,7 +172,7 @@ export default function App() {
           .cloneNode(true);
         clone.style.position = "absolute";
         clone.style.left = e.clientX - 70 + "px";
-        clone.style.top = e.clientY - clone.offsetHeight / 2 + "px";
+        clone.style.top = e.clientY - 16 + "px";
         e.target.appendChild(clone);
       }
     }
@@ -291,7 +291,9 @@ export default function App() {
             spriteToggle={spriteToggle}
             setSpriteToggle={setSpriteToggle}
             dragStart={(event) => onDragStart(event)}
+            dragDrop={dragDrop}
           />
+          <div className="w-auto h-screen text-black">jjjjj</div>
         </div>
       </div>
     </div>
