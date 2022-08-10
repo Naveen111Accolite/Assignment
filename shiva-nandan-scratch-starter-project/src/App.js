@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Sidebar from "./components/Sidebar";
 import MidArea from "./components/MidArea";
 import PreviewArea from "./components/PreviewArea";
 import ToggleSprite from "./components/ToggleSprite";
+import Icon from "./components/Icon";
 
 export default function App() {
   const [spriteToggle, setSpriteToggle] = useState(true);
   const [ParentIdSelector, setParentIdSelector] = useState();
   const [selectedElementAttr, setSelectedElementAttr] = useState();
   const [dragParent, setDragParent] = useState();
+
+  const flagRef = useRef();
 
   function dragDrop2(ev) {
     ev.preventDefault();
@@ -190,6 +193,7 @@ export default function App() {
 
     if (e.target.id != "midarea") {
       // alert("hello");
+      // const targetEle = document.querySelector(`#midarea #${e.target.id}`);
       const targetEle = document.querySelector(`#midarea #${e.target.id}`);
       // const droppedEle = document.getElementById(data[0]).cloneNode(true);
 
@@ -251,6 +255,25 @@ export default function App() {
       droppedEle.style.top = "0px";
       droppedEle.style.margin = "0px 0px";
 
+      if (droppedEle.id == "when") {
+        let parentEle = e.target.parentNode;
+        let parentTarget = e.target;
+        if (parentEle.id == "Parent") {
+          parentEle.insertAdjacentElement("afterbegin", droppedEle);
+        } else if (parentTarget.id == "Parent") {
+          parentTarget.insertAdjacentElement("afterbegin", droppedEle);
+        }
+        console.log(
+          "droppedEle.id",
+          e.target,
+          e.target.parentNode,
+          droppedEle,
+          parentEle,
+          parentTarget
+        );
+
+        return;
+      }
       if (e.target.id == "Parent") {
         targetEle.insertAdjacentElement("beforeend", droppedEle);
       } else {
@@ -266,6 +289,17 @@ export default function App() {
           spriteToggle={spriteToggle}
           setSpriteToggle={setSpriteToggle}
         />
+        <div
+          className="absolute left-2/3 top-1 w-8 h-5 bg-blue-200 rounded"
+          onClick={() => flagRef.current.flagClickHandler()}
+        >
+          <Icon
+            id="flag"
+            name="flag"
+            size={20}
+            className="text-green-600 mx-2"
+          />
+        </div>
         <div className="flex-1 h-screen overflow-hidden flex flex-row bg-white border-t border-r border-gray-200 rounded-tr-xl mr-2">
           <Sidebar
             dragStart={(event) => onDragStart(event)}
@@ -283,6 +317,7 @@ export default function App() {
             ParentIdSelector={ParentIdSelector}
             setParentIdSelector={setParentIdSelector}
             selectedElementAttr={selectedElementAttr}
+            ref={flagRef}
           />
         </div>
 
