@@ -9,6 +9,7 @@ function BananaSprite() {
       height="76.47245788574219"
       viewBox="0.10490679740905762 -0.11825206875801086 78.0933609008789 76.47245788574219"
       version="1.1"
+      id="BananaSprite"
       //   xml:space="preserve"
     >
       <g id="mysprite">

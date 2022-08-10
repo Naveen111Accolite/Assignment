@@ -8,6 +8,10 @@
   transform-origin: center;
 } */
 
+* {
+  box-sizing: border-box;
+}
+
 #tooltip {
   width: max-content;
   padding: 5px;
@@ -52,4 +56,27 @@
 
 .ParentHighlight {
   border: 2px solid black;
+}
+
+.activeSVG {
+  /* background-color: red; */
+  /* z-index: 1000; */
+  border: 3px solid rgb(94, 110, 253) !important;
+}
+
+.activeSVG::after {
+  content: "A";
+  color: black;
+  width: 15px;
+  height: 15px;
+  position: relative;
+  /* z-index: 200000000; */
+  left: 200px;
+  top: 5px;
+  background-color: rgb(94, 110, 253);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
 }

@@ -5,6 +5,8 @@ import { Turn15ClockContext } from "../context/Turn15ClockProvider";
 import { Move10StpesContext } from "../context/Move10Steps";
 import { XandYValuesContext } from "../context/XandYValuesProvider";
 import tooltipFunc from "../utils/Tooltip";
+import { SelectedSVGContext } from "../context/SelectedSVGProvider";
+import { CloneSpriteContext } from "../context/CloneSpriteProvider";
 
 export default function MidArea({
   dragDrop,
@@ -18,6 +20,8 @@ export default function MidArea({
   const [turn15, setTurn] = useContext(Turn15ClockContext);
   const [move10, setMove10] = useContext(Move10StpesContext);
   const [x, setX, y, setY] = useContext(XandYValuesContext);
+  const [selectedSVG, setSelectedSVG] = useContext(SelectedSVGContext);
+  const [clonesprite, setClonesprite] = useContext(CloneSpriteContext);
 
   // const blocklyDiv = useRef("");
 
@@ -58,7 +62,10 @@ export default function MidArea({
     midarea.addEventListener(
       "click",
       (ev) => {
-        let svg = document.querySelector("#sprite svg");
+        // let svg = document.querySelector("#sprite svg .SelectedSVGEle");
+        let svg = document.querySelector("#sprite .SelectedSVGEle");
+        // .classList.contains("SelectedSVGEle");
+        console.log("svggggg", svg);
         let targetId = ev.target.id;
 
         if (ev.target.parentNode.id == "Parent" || ev.target.id == "Parent") {
@@ -109,6 +116,7 @@ export default function MidArea({
             }
             case "move10": {
               setMove10((prev) => prev + 10);
+              console.log("move100000000000000000");
               break;
             }
             case "turn15deganticlock": {
@@ -145,7 +153,8 @@ export default function MidArea({
               let glidetoXYValue = document.querySelector(
                 "#midarea #secsforXY"
               );
-              let svg = document.querySelector("#sprite svg");
+              // let svg = document.querySelector("#sprite svg");
+              // let svg = document.querySelector("#sprite .SelectedSVGEle");
 
               let glideSecs = glidetoXYValue.value || 0;
 
@@ -233,21 +242,21 @@ export default function MidArea({
               let changeSizeByValue = document.querySelector(
                 "#midarea #changeSizeByInput"
               );
-              var svg1 = document
-                .getElementById("sprite")
-                .getElementsByTagName("svg")[0];
-              let widthSvg = parseInt(svg1.getAttribute("width"));
-              let heightSvg = parseInt(svg1.getAttribute("height"));
+              // var svg1 = document
+              //   .getElementById("sprite")
+              //   .getElementsByTagName("svg")[0];
+              let widthSvg = parseInt(svg.getAttribute("width"));
+              let heightSvg = parseInt(svg.getAttribute("height"));
 
-              svg1.setAttribute(
+              svg.setAttribute(
                 "width",
                 `${widthSvg + parseInt(changeSizeByValue?.value)}` + "px"
               );
-              svg1.setAttribute(
+              svg.setAttribute(
                 "height",
                 `${heightSvg + parseInt(changeSizeByValue?.value)}` + "px"
               );
-              svg1.setAttribute("viewBox", `${x} ${y} 100 100`);
+              svg.setAttribute("viewBox", `${x} ${y} 100 100`);
 
               break;
             }
@@ -278,21 +287,24 @@ export default function MidArea({
               let setSizeToValue = document.querySelector(
                 "#midarea #setSizeToInput"
               );
-              var svg1 = document
-                .getElementById("sprite")
-                .getElementsByTagName("svg")[0];
+              // var svg1 = document
+              //   .getElementById("sprite")
+              //   .getElementsByTagName("svg")[0];
+
+              // var svg1 = document.querySelector("#sprite .SelectedSVGEle");
+              // .getElementsByTagName("svg")[0];
 
               if (setSizeToValue?.value) {
-                svg1.setAttribute(
+                svg.setAttribute(
                   "width",
                   `${parseInt(setSizeToValue.value)}` + "px"
                 );
-                svg1.setAttribute(
+                svg.setAttribute(
                   "height",
                   `${parseInt(setSizeToValue.value)}` + "px"
                 );
               }
-              svg1.setAttribute("viewBox", `${x} ${y} 100 100`);
+              svg.setAttribute("viewBox", `${x} ${y} 100 100`);
               break;
             }
             case "show": {
@@ -343,9 +355,10 @@ export default function MidArea({
               break;
             }
             case "createClone": {
-              let sprite = document.querySelector("#sprite");
-
-              sprite.innerHTML += svg.outerHTML;
+              let sprite = document.querySelector("#sprite ");
+              console.log("createClone", sprite, svg.id);
+              sprite.appendChild(svg.outerHTML);
+              // sprite.innerHTML += svg.outerHTML;
               break;
             }
             // case "reset": {

@@ -4,6 +4,8 @@ import BananaSprite from "./BananaSprite";
 import { Turn15ClockContext } from "../context/Turn15ClockProvider";
 import { Move10StpesContext } from "../context/Move10Steps";
 import { XandYValuesContext } from "../context/XandYValuesProvider";
+import { SelectedSVGContext } from "../context/SelectedSVGProvider";
+import { CloneSpriteContext } from "../context/CloneSpriteProvider";
 import tooltipFunc from "../utils/Tooltip";
 
 import "../styles.css";
@@ -18,12 +20,19 @@ export default function PreviewArea({
   const [move10, setMove10] = useContext(Move10StpesContext);
 
   const [x, setX, y, setY] = useContext(XandYValuesContext);
+  const [selectedSVG, setSelectedSVG] = useContext(SelectedSVGContext);
+  const [clonesprite, setClonesprite] = useContext(CloneSpriteContext);
+
   const [coord, setCoord] = useState({ x: 0, y: 0 });
+
+  const spriteSvg = document.querySelector("#sprite > .SelectedSVGEle");
 
   useEffect(
     (ev) => {
+      const spriteSvg = document.querySelector("#sprite > .SelectedSVGEle");
+
       console.log(turn15, "cccccturn15");
-      const spriteSvg = document.querySelector("#sprite > svg");
+      // const spriteSvg = document.querySelector("#sprite > .SelectedSVGEle");
 
       if (spriteSvg) {
         spriteSvg.style.position = "relative";
@@ -42,17 +51,59 @@ export default function PreviewArea({
   }, [turn15, move10]);
 
   useEffect(() => {
-    const spriteSvg = document.querySelector("#sprite > svg");
+    // const spriteSvg = document.querySelector("#sprite > svg");
+    // const spriteSvg = document.querySelector("#sprite > .SelectedSVGEle");
     if (spriteSvg) {
       spriteSvg.style.transform = `rotate(${turn15}deg)`;
     }
   }, [turn15]);
 
   useEffect(() => {
-    const spriteSvg = document.querySelector("#sprite > svg");
+    const spriteSvg = document.querySelector("#sprite > .SelectedSVGEle");
+
     if (spriteSvg) {
-      spriteSvg.addEventListener("click", () => {
-        tooltipFunc("Hi there, did you call me?", 3);
+      spriteSvg.addEventListener("click", (e) => {
+        if (e.target.closest(".SelectedSVGEle")) {
+          tooltipFunc("Hi there, did you call me?", 3);
+        }
+      });
+
+      spriteSvg.addEventListener("dblclick", (e) => {
+        //to set active element
+        if (!e.target.closest(".SelectedSVGEle")) {
+          console.log("e.target---", e.target.closest("svg"));
+          let findOtherActiveSVG = document.querySelectorAll(
+            "#sprite > .SelectedSVGEle"
+          );
+          let targetSVG = e.target.closest("svg");
+          console.log("targetSVG", targetSVG.id, findOtherActiveSVG);
+
+          if (findOtherActiveSVG) {
+            for (let i = 0; i < findOtherActiveSVG.length; i++) {
+              findOtherActiveSVG[i].classList.remove("SelectedSVGEle");
+            }
+          }
+
+          targetSVG.classList.add("SelectedSVGEle");
+          setSelectedSVG(targetSVG.id);
+          console.log("targetSVG", targetSVG.id, findOtherActiveSVG);
+
+          // return;
+        }
+
+        let findALLOtherSVGContainingACTIVE =
+          document.querySelectorAll("#allsprites > div");
+
+        findALLOtherSVGContainingACTIVE.forEach((ele) => {
+          if (ele.classList.contains("activeSVG")) {
+            ele.classList.remove("activeSVG");
+          }
+        });
+
+        let setSVG = document.querySelector(`#allsprites #${selectedSVG}`);
+        setSVG.classList.add("activeSVG");
+
+        console.log("e.target-22222--", e.target.closest("svg"));
       });
     }
   });
@@ -107,7 +158,38 @@ export default function PreviewArea({
   //   console.log(coord);
   // }, [coord]);
 
+  useEffect(() => {
+    console.log("selectedSVG", selectedSVG);
+  }, [selectedSVG]);
+
+  function setActiveSVGEle(svg) {
+    let AllSVGs = document.querySelectorAll("#sprite > svg");
+    AllSVGs.forEach((ele) => {
+      if (ele.classList.contains("SelectedSVGEle")) {
+        ele.classList.remove("SelectedSVGEle");
+      }
+    });
+
+    let ele = document.getElementById(selectedSVG);
+    if (ele) {
+      console.log("ele", ele.id);
+      ele.classList.add("SelectedSVGEle");
+    }
+  }
+
   let selectedSVGElement = spriteToggle ? <CatSprite /> : <BananaSprite />;
+  let selectedSVGElement1 = function selectSVG() {
+    switch (selectedSVG) {
+      case "CatSprite": {
+        setActiveSVGEle();
+      }
+      case "BananaSprite": {
+        setActiveSVGEle();
+      }
+    }
+  };
+
+  useEffect(() => {}, []);
 
   return (
     <div
@@ -115,11 +197,14 @@ export default function PreviewArea({
       // onDragOver={(event) => allowDrop(event)}
       onDragStart={(event) => dragStart(event)}
       id="sprite"
-      className="flex-none h-2/3 w-full overflow-y-auto p-2 "
+      className="flex-none h-3/5 w-full overflow-y-auto p-2 rounded bg-black"
     >
       {/* <div> */}
       {/* {spriteToggle ? <CatSprite /> : <BananaSprite />} */}
-      {selectedSVGElement}
+      {selectedSVGElement1()}
+      {<CatSprite />}
+      {<BananaSprite />}
+      {clonesprite}
     </div>
   );
 }

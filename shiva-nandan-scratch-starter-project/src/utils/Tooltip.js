@@ -5,7 +5,7 @@ export default function tooltipFunc(value, timeInSecs) {
 
   //function to create div with tooltip id for Tooltip CSS properties
   function createDiv(val) {
-    let sprite = document.querySelector("#sprite");
+    let sprite = document.querySelector("#sprite ");
     let div1 = document.createElement("div");
     div1.innerHTML = val;
     div1.setAttribute("id", "tooltip");
@@ -16,7 +16,8 @@ export default function tooltipFunc(value, timeInSecs) {
 
   //show tooltip with respect to it's position
   function showTooltip() {
-    var mysprite = document.getElementById("mysprite");
+    // var mysprite = document.getElementById("mysprite");
+    var mysprite = document.querySelector("#sprite .SelectedSVGEle");
     var tooltip = document.getElementById("tooltip");
 
     var iconPos = mysprite.getBoundingClientRect();

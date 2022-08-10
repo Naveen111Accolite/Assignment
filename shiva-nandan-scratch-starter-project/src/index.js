@@ -6,6 +6,8 @@ import Turn15ClockProvider from "./context/Turn15ClockProvider";
 import Move10StpesProvider from "./context/Move10Steps";
 import GoToPosProvider from "./context/GoToPosProvider";
 import XandYValuesProvider from "./context/XandYValuesProvider";
+import SelectedSVGProvider from "./context/SelectedSVGProvider";
+import CloneSpriteProvider from "./context/CloneSpriteProvider";
 
 console.log("hi");
 
@@ -15,7 +17,11 @@ ReactDOM.render(
       <Move10StpesProvider>
         <GoToPosProvider>
           <XandYValuesProvider>
-            <App />
+            <SelectedSVGProvider>
+              <CloneSpriteProvider>
+                <App />
+              </CloneSpriteProvider>
+            </SelectedSVGProvider>
           </XandYValuesProvider>
         </GoToPosProvider>
       </Move10StpesProvider>

@@ -3,6 +3,7 @@ import Sidebar from "./components/Sidebar";
 import MidArea from "./components/MidArea";
 import PreviewArea from "./components/PreviewArea";
 import ToggleSprite from "./components/ToggleSprite";
+import SelectionArea from "./components/SelectionArea";
 
 export default function App() {
   const [spriteToggle, setSpriteToggle] = useState(true);
@@ -286,14 +287,16 @@ export default function App() {
           />
         </div>
 
-        <div className="w-1/3 h-screen overflow-hidden flex flex-row bg-white border-t border-l border-gray-200 rounded-tl-xl ml-2">
+        <div className="w-1/3 h-auto overflow-hidden flex flex-column bg-white border-t border-l border-gray-200 rounded-tl-xl">
           <PreviewArea
             spriteToggle={spriteToggle}
             setSpriteToggle={setSpriteToggle}
             dragStart={(event) => onDragStart(event)}
             dragDrop={dragDrop}
           />
-          <div className="w-auto h-screen text-black">jjjjj</div>
+          <div className="w-4/12 h-1/3 text-black  absolute right-0 bottom-0  rounded overflow-hidden border-solid border-black border-2 ">
+            <SelectionArea />
+          </div>
         </div>
       </div>
     </div>
