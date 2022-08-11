@@ -14,6 +14,9 @@ export default function App() {
   const [stop, setStop] = useState(false);
   const flagRef = useRef();
 
+  let backdropList = ["red", "blue", "green"];
+  const [backdrop, setBackdrop] = useState();
+
   function dragDrop2(ev) {
     ev.preventDefault();
     //delete elements from midarea when dropped to sidebar section
@@ -257,7 +260,8 @@ export default function App() {
       if (
         droppedEle.id == "when" ||
         droppedEle.id == "this" ||
-        droppedEle.id == "keyPress"
+        droppedEle.id == "keyPress" ||
+        droppedEle.id == "WhenBackdropSwitchesTo"
       ) {
         let parentEle = e.target.parentNode;
         let parentTarget = e.target;
@@ -316,6 +320,7 @@ export default function App() {
             dragDrop={(event) => dragDrop2(event)}
             ParentIdSelector={ParentIdSelector}
             setParentIdSelector={setParentIdSelector}
+            backdropList={backdropList}
           />{" "}
           <MidArea
             // dragDrop2={dragDrop2}
@@ -329,6 +334,9 @@ export default function App() {
             selectedElementAttr={selectedElementAttr}
             ref={flagRef}
             stop={stop}
+            backdropList={backdropList}
+            backdrop={backdrop}
+            setBackdrop={setBackdrop}
           />
         </div>
 

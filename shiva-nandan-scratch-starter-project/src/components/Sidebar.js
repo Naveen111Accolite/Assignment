@@ -4,6 +4,7 @@ import { Turn15ClockContext } from "../context/Turn15ClockProvider";
 
 import { XandYValuesContext } from "../context/XandYValuesProvider";
 import BlockWithInput from "../blocks/BlockWithInput";
+import BlockWithDropdown from "../blocks/BlockWithDropdown";
 
 // import Blockly from "blockly";
 
@@ -12,6 +13,7 @@ export default function Sidebar({
   dragStart,
   ParentIdSelector,
   setParentIdSelector,
+  backdropList,
 }) {
   const [x, setX, y, setY] = useContext(XandYValuesContext);
 
@@ -105,6 +107,13 @@ export default function Sidebar({
         </select>
         {"Key pressed"}
       </div>
+      <BlockWithDropdown
+        Id="WhenBackdropSwitchesTo"
+        FirstField="When backdrop switches to"
+        dragStart={dragStart}
+        color={"yellow"}
+        list={backdropList}
+      ></BlockWithDropdown>
       <div className="font-bold ">
         {" "}
         {/* */} {"Motion"}{" "}
@@ -278,6 +287,19 @@ export default function Sidebar({
         dragStart={dragStart}
         color="pink"
       ></BlockWithInput>
+      <BlockWithDropdown
+        Id="backdropSwitch"
+        FirstField="set backdrop to"
+        dragStart={dragStart}
+        color={"pink"}
+        list={backdropList}
+      ></BlockWithDropdown>
+      <BlockWithDropdown
+        Id="backdropNext"
+        FirstField="Next backdrop"
+        dragStart={dragStart}
+        color={"pink"}
+      ></BlockWithDropdown>
       <BlockWithInput
         Id="show"
         FirstField="Show"

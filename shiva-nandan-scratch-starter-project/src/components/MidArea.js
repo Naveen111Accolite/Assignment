@@ -16,6 +16,7 @@ import { SelectedSVGContext } from "../context/SelectedSVGProvider";
 import { CloneSpriteContext } from "../context/CloneSpriteProvider";
 import CatSprite from "./CatSprite";
 import BananaSprite from "./BananaSprite";
+// import download from "../backdrops/download.jpg";
 
 const MidArea = forwardRef(
   (
@@ -29,6 +30,9 @@ const MidArea = forwardRef(
       // spriteToggle,
       thisSVGClick,
       stop,
+      backdropList,
+      backdrop,
+      setBackdrop,
     },
     ref
   ) => {
@@ -99,6 +103,11 @@ const MidArea = forwardRef(
         case "this": {
           // tooltipFunc("You clicked me", 3);
           // await timeout(3);
+          break;
+        }
+        case "WhenBackdropSwitchesTo": {
+          // tooltipFunc("You clicked me", 3);
+          await timeout(0.5);
           break;
         }
         case "turn15degclock": {
@@ -308,6 +317,39 @@ const MidArea = forwardRef(
 
           break;
         }
+        case "backdropSwitch": {
+          let backdropValue = document.querySelector(
+            `#midarea [data-ts="${idtimestamp}"] select`
+          );
+          let previewArea = document.getElementById("sprite");
+          console.log("backdropValue", backdropValue.value);
+          setBackdrop(backdropValue.value);
+
+          // previewArea.style.backgroundImage = `url('../backdrops/${backdropValue}.jpeg')`;
+          previewArea.style.backgroundColor = `${backdropValue.value}`;
+          // previewArea.style.backgroundImage = `url(${download})`;
+          await timeout(0.5);
+
+          break;
+        }
+        case "backdropNext": {
+          // let backdrops = ["red", "blue", "green"];
+
+          let previewArea = document.getElementById("sprite");
+          let index = backdropList.indexOf(backdrop);
+
+          if (index != -1) {
+            if (index < backdropList.length - 1) {
+              previewArea.style.backgroundColor = backdropList[index + 1];
+              setBackdrop(backdropList[index + 1]);
+            } else {
+              previewArea.style.backgroundColor = backdropList[0];
+              setBackdrop(backdropList[0]);
+            }
+          }
+          await timeout(0.5);
+          break;
+        }
         case "setSizeTo": {
           let setSizeToValue = document.querySelector(
             `#midarea [data-ts="${idtimestamp}"] #setSizeToInput`
@@ -373,7 +415,7 @@ const MidArea = forwardRef(
             setTimeout(() => {
               randomPos();
             }, i * 1000);
-            await timeout(parseInt(i));
+            await timeout(1);
           }
           break;
         }
@@ -480,7 +522,7 @@ const MidArea = forwardRef(
 
       if (!(ev.target.parentNode.id == "Parent" || ev.target.id == "Parent")) {
         let idtimestamp = ev.target.getAttribute("data-ts");
-        console.log("targetId", targetId, idtimestamp);
+        // console.log("targetId", targetId, idtimestamp);
         switchFunc(targetId, idtimestamp);
       }
     };
@@ -533,6 +575,30 @@ const MidArea = forwardRef(
 
       setTurn(angle ? angle : 0);
     }, [selectedSVG]);
+
+    useEffect(() => {
+      let backdropEvent = document.querySelectorAll(
+        "#midarea #WhenBackdropSwitchesTo"
+      );
+      for (let i = 0; i < backdropEvent.length; i++) {
+        if (backdropEvent[i].querySelector("select").value == backdrop) {
+          switchLoopHandler([backdropEvent[i]]);
+        }
+      }
+    }, [backdrop]);
+
+    useEffect(() => {
+      let parentNodes = document.querySelectorAll("#Parent");
+
+      if (parentNodes) {
+        for (let i = 0; i < parentNodes.length; i++) {
+          if (parentNodes[i].childNodes.length == 0) {
+            parentNodes[i].remove();
+            console.log("No children");
+          }
+        }
+      }
+    });
 
     return (
       <div
