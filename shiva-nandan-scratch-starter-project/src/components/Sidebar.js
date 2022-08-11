@@ -100,10 +100,10 @@ export default function Sidebar({
         <select className="bg-yellow text-black rounded mx-2">
           <option value="ArrowUp">Up Arrow</option>
           <option value="ArrowDown">Down Arrow</option>
-          <option value="ArrowRight">Left Arrow</option>
+          <option value="ArrowLeft">Left Arrow</option>
           <option value="ArrowRight">Right Arrow</option>
         </select>
-        {"Key pressed move to random position"}
+        {"Key pressed"}
       </div>
       <div className="font-bold ">
         {" "}

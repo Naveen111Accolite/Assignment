@@ -1,4 +1,5 @@
 import React, { useState, createContext, useEffect } from "react";
+import CatSprite from "../components/CatSprite";
 
 export const CloneSpriteContext = createContext();
 function CloneSpriteProvider(props) {

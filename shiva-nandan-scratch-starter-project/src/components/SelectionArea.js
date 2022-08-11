@@ -38,7 +38,7 @@ function SelectionArea() {
     //   document.getElementById("CatSprite").classList.add("activeSVG");
     // });
 
-    selectSVG.addEventListener("dblclick", (ev) => {
+    selectSVG.addEventListener("click", (ev) => {
       let findALLOtherSVGContainingACTIVE =
         document.querySelectorAll("#allsprites > div");
 
@@ -86,16 +86,13 @@ function SelectionArea() {
       <div className="flex justify-center items-center h-2/3">{sprite.SVG}</div>
       {console.log("sprite.name", sprite.name)}
       <div className="text-medium border-t-solid border-t-white border-t-2 box-border bg-blue-400 p-0.5 w-auto text-center">
-        Sprite {indx + 1}
+        {sprite.name.slice(0, -6)}
       </div>
     </div>
   ));
 
   return (
-    <div
-      id="allsprites"
-      className="overflow-hidden flex flex-column m-1 bg-white"
-    >
+    <div id="allsprites" className="overflow-hidden flex flex-column m-1 ">
       {/* <div className="w-1 h-1"> */}
       {SelectedSprites}
     </div>

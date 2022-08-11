@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Sidebar from "./components/Sidebar";
 import MidArea from "./components/MidArea";
 import PreviewArea from "./components/PreviewArea";
 import ToggleSprite from "./components/ToggleSprite";
 import SelectionArea from "./components/SelectionArea";
+import Icon from "./components/Icon";
 
 export default function App() {
   const [spriteToggle, setSpriteToggle] = useState(true);
   const [ParentIdSelector, setParentIdSelector] = useState();
   const [selectedElementAttr, setSelectedElementAttr] = useState();
   const [dragParent, setDragParent] = useState();
+  const [stop, setStop] = useState(false);
+  const flagRef = useRef();
 
   function dragDrop2(ev) {
     ev.preventDefault();
@@ -57,7 +60,7 @@ export default function App() {
     // ev.preventDefault();
     let targetElement = ev.target;
     const rect = ev.target.getBoundingClientRect();
-    console.log("targetElement", targetElement, rect.left, rect.top);
+    // console.log("targetElement", targetElement, rect.left, rect.top);
 
     if (targetElement.getAttribute("data-parent-ts")) {
       setDragParent(targetElement.getAttribute("data-parent-ts"));
@@ -121,7 +124,7 @@ export default function App() {
     }
 
     if (e.target.parentNode.id == "sidebar") {
-      console.log("dropeedddddddd");
+      console.log("droppeedddddddd");
     }
 
     if (ParentIdSelector == "midarea" || ParentIdSelector == "Parent") {
@@ -133,22 +136,7 @@ export default function App() {
           eleSelected.style.top = e.clientY + "px";
           document.getElementById("midarea").appendChild(eleSelected);
         }
-        // if (ParentIdSelector == "Parent" && e.target.id == "midarea") {
-        //   console.log(
-        //     "parent and midareassssss",
-        //     eleSelected.offsetWidth,
-        //     eleSelected.offsetHeight
-        //   );
-        //   eleSelected.style.position = "absolute";
 
-        //   eleSelected.style.left =
-        //     e.clientX - eleSelected.offsetWidth / 2 + "px";
-        //   eleSelected.style.top =
-        //     e.clientY - aeleSelected.offsetHeight / 2 + "px";
-        // }
-        // eleSelected.style.position = "absolute";
-        // eleSelected.style.left = coordinates[0] + 240 + "px";
-        // eleSelected.style.top = coordinates[1] + "px";
         if (
           (ParentIdSelector == "midarea" && e.target.id == "midarea") ||
           (ParentIdSelector == "Parent" && e.target.id == "midarea")
@@ -161,21 +149,19 @@ export default function App() {
             e.clientY - eleSelected.offsetHeight / 2 + "px";
         }
       }
-    } else {
-      if (
-        e.target.id == "midarea" &&
-        ParentIdSelector != "midarea" &&
-        ParentIdSelector != "Parent"
-      ) {
-        // let clone = document.getElementById(data[0]).cloneNode(true);
-        let clone = document
-          .querySelector(`[data-ts="${data[1]}"]`)
-          .cloneNode(true);
-        clone.style.position = "absolute";
-        clone.style.left = e.clientX - 70 + "px";
-        clone.style.top = e.clientY - 16 + "px";
-        e.target.appendChild(clone);
-      }
+    } else if (
+      e.target.id == "midarea" &&
+      ParentIdSelector != "midarea" &&
+      ParentIdSelector != "Parent"
+    ) {
+      // let clone = document.getElementById(data[0]).cloneNode(true);
+      let clone = document
+        .querySelector(`[data-ts="${data[1]}"]`)
+        .cloneNode(true);
+      clone.style.position = "absolute";
+      clone.style.left = e.clientX - 70 + "px";
+      clone.style.top = e.clientY - 16 + "px";
+      e.target.appendChild(clone);
     }
 
     let parentNode = document.getElementById("Parent");
@@ -187,12 +173,26 @@ export default function App() {
       }
     }
 
-    console.log("e.target.id", e.target.id);
+    // console.log("e.target.id", e.target.id);
 
     if (e.target.id != "midarea") {
       // alert("hello");
-      const targetEle = document.querySelector(`#midarea #${e.target.id}`);
+      let targetElementTS =
+        e.target.getAttribute("data-ts") ||
+        e.target.getAttribute("data-parent-ts");
+      // const targetEle = document.querySelector(`#midarea #${e.target.id}`);
+      if (e.target.getAttribute("data-ts")) {
+        var targetEle = document.querySelector(
+          `#midarea [data-ts="${targetElementTS}"]`
+        );
+      } else if (e.target.getAttribute("data-parent-ts")) {
+        var targetEle = document.querySelector(
+          `#midarea [data-parent-ts="${targetElementTS}"]`
+        );
+      }
+
       // const droppedEle = document.getElementById(data[0]).cloneNode(true);
+      // console.log("targetElementTS", targetElementTS);
 
       if (ParentIdSelector == "midarea") {
         var droppedEle = document.querySelector(
@@ -210,7 +210,7 @@ export default function App() {
         var droppedEle = document
           .querySelector(`[data-ts="${data[1]}"]`)
           .cloneNode(true);
-        console.log("dropped midarea cloneee");
+        // console.log("dropped midarea cloneee");
       }
 
       function snapElements() {
@@ -252,6 +252,24 @@ export default function App() {
       droppedEle.style.top = "0px";
       droppedEle.style.margin = "0px 0px";
 
+      // console.log("droppedele", droppedEle, targetEle);
+
+      if (
+        droppedEle.id == "when" ||
+        droppedEle.id == "this" ||
+        droppedEle.id == "keyPress"
+      ) {
+        let parentEle = e.target.parentNode;
+        let parentTarget = e.target;
+        if (parentEle.id == "Parent") {
+          parentEle.insertAdjacentElement("afterbegin", droppedEle);
+        } else if (parentTarget.id == "Parent") {
+          parentTarget.insertAdjacentElement("afterbegin", droppedEle);
+        }
+
+        return;
+      }
+
       if (e.target.id == "Parent") {
         targetEle.insertAdjacentElement("beforeend", droppedEle);
       } else {
@@ -260,13 +278,38 @@ export default function App() {
     }
   }
 
+  // function stopAll() {
+  //   console.log("stopAll");
+  //   setStop(true);
+  //   // setTimeout(() => {
+  //   //   setStop(false);
+  //   // }, 1000);
+  // }
+
   return (
     <div className="bg-blue-100 pt-6 font-sans">
       <div className="h-screen overflow-hidden flex flex-row  ">
-        <ToggleSprite
+        {/* <ToggleSprite
           spriteToggle={spriteToggle}
           setSpriteToggle={setSpriteToggle}
-        />
+        /> */}
+        <div
+          className="absolute left-2/3 top-1 w-8 h-5 bg-blue-200 rounded"
+          onClick={() => flagRef.current.flagClickHandler()}
+        >
+          <Icon
+            id="flag"
+            name="flag"
+            size={20}
+            className="text-green-600 mx-2"
+          />
+        </div>
+        {/* <div
+          className="absolute right-1/4 top-1 w-auto h-5 bg-blue-200 rounded"
+          onClick={() => stopAll()}
+        >
+          <Icon id="stop" name="stop" size={20} className="text-red-600 " />
+        </div> */}
         <div className="flex-1 h-screen overflow-hidden flex flex-row bg-white border-t border-r border-gray-200 rounded-tr-xl mr-2">
           <Sidebar
             dragStart={(event) => onDragStart(event)}
@@ -284,6 +327,8 @@ export default function App() {
             ParentIdSelector={ParentIdSelector}
             setParentIdSelector={setParentIdSelector}
             selectedElementAttr={selectedElementAttr}
+            ref={flagRef}
+            stop={stop}
           />
         </div>
 
@@ -294,7 +339,7 @@ export default function App() {
             dragStart={(event) => onDragStart(event)}
             dragDrop={dragDrop}
           />
-          <div className="w-4/12 h-1/3 text-black  absolute right-0 bottom-0  rounded overflow-hidden border-solid border-black border-2 ">
+          <div className="w-4/12 h-1/3 text-black  absolute right-0 -bottom-5  rounded overflow-hidden border-solid border-black border-2 bg-white ">
             <SelectionArea />
           </div>
         </div>

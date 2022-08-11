@@ -30,12 +30,26 @@ export default function tooltipFunc(value, timeInSecs) {
   }
   showTooltip();
 
-  if (timeInSecs) {
-    setTimeout(() => {
-      let tooltip = document.querySelector("#sprite #tooltip");
-      if (tooltip) {
-        tooltip.style.display = "none";
-      }
-    }, timeInSecs * 1000);
-  }
+  const getPromise = (time) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(`Promise resolved for ${time}s`);
+      }, time);
+    });
+  };
+
+  const setTimeoutPromise = () => {
+    if (timeInSecs) {
+      return new Promise((resolve) =>
+        setTimeout(() => {
+          let tooltip = document.querySelector("#sprite #tooltip");
+          if (tooltip) {
+            tooltip.style.display = "none";
+          }
+          resolve();
+        }, timeInSecs * 1000)
+      );
+    }
+  };
+  setTimeoutPromise();
 }
