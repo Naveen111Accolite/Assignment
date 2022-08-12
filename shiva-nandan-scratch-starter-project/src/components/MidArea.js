@@ -329,14 +329,12 @@ const MidArea = forwardRef(
           svg.style.filter =
             "brightness(101.645%) contrast(122.62%) saturate(219.885%)";
           await timeout(0.5);
-
           break;
         }
         case "clearGraphicEffect": {
           svg.style.filter =
             "brightness(101.645%) contrast(122.62%) saturate(219.885%)";
           await timeout(0.5);
-
           break;
         }
         case "backdropSwitch": {
@@ -351,8 +349,6 @@ const MidArea = forwardRef(
           break;
         }
         case "backdropNext": {
-          // let backdrops = ["red", "blue", "green"];
-
           let previewArea = document.getElementById("sprite");
           let index = backdropList.indexOf(backdrop);
 
@@ -372,12 +368,6 @@ const MidArea = forwardRef(
           let setSizeToValue = document.querySelector(
             `#midarea [data-ts="${idtimestamp}"] #setSizeToInput`
           );
-          // var svg1 = document
-          //   .getElementById("sprite")
-          //   .getElementsByTagName("svg")[0];
-
-          // var svg1 = document.querySelector("#sprite .SelectedSVGEle");
-          // .getElementsByTagName("svg")[0];
 
           if (setSizeToValue?.value) {
             svg.setAttribute(
@@ -389,7 +379,7 @@ const MidArea = forwardRef(
               `${parseInt(setSizeToValue.value)}` + "px"
             );
           }
-          svg.setAttribute("viewBox", `${x} ${y} 100 100`);
+          svg.setAttribute("viewBox", `0 0 100 100`);
           await timeout(0.5);
           break;
         }
