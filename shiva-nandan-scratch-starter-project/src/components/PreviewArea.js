@@ -15,6 +15,7 @@ export default function PreviewArea({
   setSpriteToggle,
   dragStart,
   dragDrop,
+  setLayer,
 }) {
   const [turn15, setTurn] = useContext(Turn15ClockContext);
   const [move10, setMove10] = useContext(Move10StpesContext);
@@ -89,7 +90,6 @@ export default function PreviewArea({
           targetSVG.classList.add("SelectedSVGEle");
           setSelectedSVG(targetSVG.id);
           // console.log("targetSVG", targetSVG.id, findOtherActiveSVG);
-
           // return;
         }
 
@@ -109,6 +109,9 @@ export default function PreviewArea({
       });
     }
   });
+  useEffect(() => {
+    setLayer((prev) => prev + 1);
+  }, [selectedSVG]);
 
   // useEffect(() => {
   //   // window.onload = addListeners;

@@ -14,6 +14,7 @@ export default function Sidebar({
   ParentIdSelector,
   setParentIdSelector,
   backdropList,
+  broadcastList,
 }) {
   const [x, setX, y, setY] = useContext(XandYValuesContext);
 
@@ -113,6 +114,20 @@ export default function Sidebar({
         dragStart={dragStart}
         color={"yellow"}
         list={backdropList}
+      ></BlockWithDropdown>
+      <BlockWithDropdown
+        Id="whenIReceiveBroadcast"
+        FirstField="When I receive"
+        dragStart={dragStart}
+        color={"yellow"}
+        list={broadcastList}
+      ></BlockWithDropdown>
+      <BlockWithDropdown
+        Id="broadcast"
+        FirstField="broadcast"
+        dragStart={dragStart}
+        color={"yellow"}
+        list={broadcastList}
       ></BlockWithDropdown>
       <div className="font-bold ">
         {" "}
@@ -287,6 +302,12 @@ export default function Sidebar({
         dragStart={dragStart}
         color="pink"
       ></BlockWithInput>
+      <BlockWithInput
+        Id="clearGraphicEffect"
+        FirstField="clear graphic effect"
+        dragStart={dragStart}
+        color="pink"
+      ></BlockWithInput>
       <BlockWithDropdown
         Id="backdropSwitch"
         FirstField="set backdrop to"
@@ -309,6 +330,18 @@ export default function Sidebar({
       <BlockWithInput
         Id="hide"
         FirstField="Hide"
+        dragStart={dragStart}
+        color="pink"
+      ></BlockWithInput>
+      <BlockWithInput
+        Id="goToFrontLayer"
+        FirstField="go to front layer"
+        dragStart={dragStart}
+        color="pink"
+      ></BlockWithInput>
+      <BlockWithInput
+        Id="goToBackLayer"
+        FirstField="go to back layer"
         dragStart={dragStart}
         color="pink"
       ></BlockWithInput>
@@ -351,12 +384,12 @@ export default function Sidebar({
         dragStart={dragStart}
         color="green"
       ></BlockWithInput>
-      {/* <BlockWithInput
-          Id="reset"
-          FirstField="Reset"
-          dragStart={dragStart}
-          color="green"
-        ></BlockWithInput> */}
+      <BlockWithInput
+        Id="reset"
+        FirstField="Reset"
+        dragStart={dragStart}
+        color="green"
+      ></BlockWithInput>
       {/* </div> */}
       {/* Blockly library */}
       {/* <div id="toolbox" style={{ height: "200px", width: "200px" }}></div> */}

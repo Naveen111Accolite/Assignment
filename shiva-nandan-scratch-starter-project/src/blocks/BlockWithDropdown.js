@@ -10,7 +10,6 @@ function BlockWithDropdown({
 }) {
   //   let backdrops = ["backdrop1", "backdrop2", "backdrop3"];
   //   let backdrops = ["red", "blue", "green"];
-  console.log("list", list);
   if (list) {
     var dropdownOptions = list.map((ele, indx) => (
       <option key={indx} value={`${ele}`} className="text-sm">

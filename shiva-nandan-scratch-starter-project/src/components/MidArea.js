@@ -33,6 +33,10 @@ const MidArea = forwardRef(
       backdropList,
       backdrop,
       setBackdrop,
+      broadcast,
+      setBroadcast,
+      layer,
+      setLayer,
     },
     ref
   ) => {
@@ -93,7 +97,6 @@ const MidArea = forwardRef(
         return new Promise((resolve) => setTimeout(resolve, secs * 1000));
       }
 
-      console.log("switchfunc", targetId, idtimestamp);
       switch (targetId) {
         case "when": {
           // tooltipFunc("Hello There", 3);
@@ -108,6 +111,23 @@ const MidArea = forwardRef(
         case "WhenBackdropSwitchesTo": {
           // tooltipFunc("You clicked me", 3);
           await timeout(0.5);
+          break;
+        }
+        case "whenIReceiveBroadcast": {
+          // setTurn((prev) => prev + 15);
+
+          await timeout(0.5);
+
+          break;
+        }
+        case "broadcast": {
+          let broadcastValue = document.querySelector(
+            `#midarea [data-ts="${idtimestamp}"] select`
+          );
+          setBroadcast(broadcastValue.value);
+          broadcastFunc();
+          await timeout(0.5);
+
           break;
         }
         case "turn15degclock": {
@@ -247,7 +267,6 @@ const MidArea = forwardRef(
           let sayHelloSecsValue = document.querySelector(
             `#midarea [data-ts="${idtimestamp}"] #sayHellosecs`
           );
-          console.log("heloowithseSTART", new Date());
           if (sayHelloTextValue?.value) {
             tooltipFunc(
               sayHelloTextValue.value,
@@ -255,8 +274,6 @@ const MidArea = forwardRef(
             );
           }
           await timeout(parseInt(sayHelloSecsValue.value));
-          console.log("heloowithseEnd", new Date());
-
           break;
         }
 
@@ -287,7 +304,8 @@ const MidArea = forwardRef(
             "height",
             `${heightSvg + parseInt(changeSizeByValue?.value)}` + "px"
           );
-          svg.setAttribute("viewBox", `${x} ${y} 100 100`);
+          svg.setAttribute("viewBox", `0 0 100 100`);
+
           await timeout(0.5);
           break;
         }
@@ -308,9 +326,13 @@ const MidArea = forwardRef(
           break;
         }
         case "setColorEffectTo": {
-          // let changeColorEffectBy = document.querySelector(
-          //   "#midarea #changeColorEffectBy"
-          // );
+          svg.style.filter =
+            "brightness(101.645%) contrast(122.62%) saturate(219.885%)";
+          await timeout(0.5);
+
+          break;
+        }
+        case "clearGraphicEffect": {
           svg.style.filter =
             "brightness(101.645%) contrast(122.62%) saturate(219.885%)";
           await timeout(0.5);
@@ -322,14 +344,10 @@ const MidArea = forwardRef(
             `#midarea [data-ts="${idtimestamp}"] select`
           );
           let previewArea = document.getElementById("sprite");
-          console.log("backdropValue", backdropValue.value);
           setBackdrop(backdropValue.value);
 
-          // previewArea.style.backgroundImage = `url('../backdrops/${backdropValue}.jpeg')`;
           previewArea.style.backgroundColor = `${backdropValue.value}`;
-          // previewArea.style.backgroundImage = `url(${download})`;
           await timeout(0.5);
-
           break;
         }
         case "backdropNext": {
@@ -385,6 +403,18 @@ const MidArea = forwardRef(
           await timeout(0.5);
           break;
         }
+        case "goToFrontLayer": {
+          setLayer((prev) => prev + 1);
+          await timeout(0.5);
+          break;
+        }
+        case "goToBackLayer": {
+          if (layer >= 1) {
+            setLayer((prev) => prev - 1);
+          }
+          await timeout(0.5);
+          break;
+        }
         case "waitForSec": {
           let waitForSec = document.querySelector(
             `#midarea [data-ts="${idtimestamp}"] #waitForSec input`
@@ -436,9 +466,6 @@ const MidArea = forwardRef(
         }
         case "createClone": {
           let sprite = document.querySelector("#sprite");
-          console.log("createClone", sprite, svg);
-          // sprite.appendChild(svg.outerHTML);
-          // setClonesprite([...clonesprite, <BananaSprite />]);
           svg.setAttribute("data-svg-ts", Date.now());
           setClonesprite([
             ...clonesprite,
@@ -448,39 +475,42 @@ const MidArea = forwardRef(
           await timeout(0.5);
           break;
         }
-        // case "reset": {
-        //   let sprite = document.querySelector("#sprite");
-        //   var tooltip = document.getElementById("tooltip");
-        //   // var svg1 = document
-        //   //   .getElementById("sprite")
-        //   //   .getElementsByTagName("svg")[0];
+        case "reset": {
+          let sprite = document.querySelector("#sprite");
+          var tooltip = document.getElementById("tooltip");
+          // var svg1 = document
+          //   .getElementById("sprite")
+          //   .getElementsByTagName("svg")[0];
 
-        //   // sprite.innerHTML = svg.outerHTML;
-        //   sprite.innerHTML = svg.outerHTML;
+          // sprite.innerHTML = svg.outerHTML;
+          // sprite.innerHTML = svg.outerHTML;
+          setClonesprite([]);
 
-        //   setX(0);
-        //   setY(0);
-        //   setTurn(0);
-        //   if (tooltip) tooltip.remove();
+          setX(0);
+          setY(0);
+          setTurn(0);
+          setBackdrop(null);
 
-        //   //reset size
-        //   // var svg1 = document
-        //   //   .getElementById("sprite")
-        //   //   .getElementsByTagName("svg")[0];
+          if (tooltip) tooltip.remove();
 
-        //   // let resetVal = 100;
+          //reset size
+          // var svg1 = document
+          //   .getElementById("sprite")
+          //   .getElementsByTagName("svg")[0];
 
-        //   // if (resetVal) {
-        //   //   svg1.setAttribute("width", `${parseInt(resetVal)}` + "px");
-        //   //   svg1.setAttribute("height", `${parseInt(resetVal)}` + "px");
-        //   // }
-        //   // svg1.setAttribute("viewBox", `${x} ${y} 100 100`);
+          let resetVal = 100;
 
-        //   // //reset filter
-        //   // svg1.style.filter =
-        //   //   "brightness(101.645%) contrast(122.62%) saturate(219.885%)";
-        //   break;
-        // }
+          if (resetVal) {
+            svg.setAttribute("width", `${parseInt(resetVal)}` + "px");
+            svg.setAttribute("height", `${parseInt(resetVal)}` + "px");
+          }
+          svg.setAttribute("viewBox", `0 0 100 100`);
+
+          // //reset filter
+          svg.style.filter =
+            "brightness(101.645%) contrast(122.62%) saturate(219.885%)";
+          break;
+        }
       }
     }
 
@@ -528,12 +558,12 @@ const MidArea = forwardRef(
     };
 
     //flag click handler
-    let flagClick = document.querySelectorAll("#midarea #when");
-    useImperativeHandle(ref, () => ({
-      flagClickHandler() {
-        switchLoopHandler(flagClick);
-      },
-    }));
+    // let flagClick = document.querySelectorAll("#midarea #when");
+    // useImperativeHandle(ref, () => ({
+    //   flagClickHandler() {
+    //     switchLoopHandler(flagClick);
+    //   },
+    // }));
 
     //function to loop through all blocks and execute one by one
     function switchLoopHandler(parentElements) {
@@ -560,6 +590,17 @@ const MidArea = forwardRef(
       });
     }, []);
 
+    //flag click handler
+    useEffect(() => {
+      let flag = document.getElementById("flagDiv");
+      if (flag) {
+        flag.addEventListener("click", (e) => {
+          let flagEvent = document.querySelectorAll("#midarea #when");
+          switchLoopHandler(flagEvent);
+        });
+      }
+    }, []);
+
     //reset to it's original values when SVG element changed
     useEffect(() => {
       let left = document.getElementById(selectedSVG).style.left;
@@ -576,16 +617,51 @@ const MidArea = forwardRef(
       setTurn(angle ? angle : 0);
     }, [selectedSVG]);
 
+    //runs when backdrop changes
     useEffect(() => {
       let backdropEvent = document.querySelectorAll(
         "#midarea #WhenBackdropSwitchesTo"
       );
+      let backdropswitchArr = [];
       for (let i = 0; i < backdropEvent.length; i++) {
         if (backdropEvent[i].querySelector("select").value == backdrop) {
-          switchLoopHandler([backdropEvent[i]]);
+          backdropswitchArr.push(backdropEvent[i]);
+          // switchLoopHandler([backdropEvent[i]]);
         }
       }
+
+      if (backdropswitchArr) {
+        switchLoopHandler(backdropswitchArr);
+      }
     }, [backdrop]);
+
+    useEffect(() => {
+      broadcastFunc();
+    }, [broadcast]);
+
+    function broadcastFunc() {
+      let broadcastEvent = document.querySelectorAll(
+        "#midarea #whenIReceiveBroadcast"
+      );
+      let broadcastswitchArr = [];
+      for (let i = 0; i < broadcastEvent.length; i++) {
+        if (broadcastEvent[i].querySelector("select").value == broadcast) {
+          broadcastswitchArr.push(broadcastEvent[i]);
+        }
+      }
+
+      if (broadcastswitchArr) {
+        switchLoopHandler(broadcastswitchArr);
+      }
+    }
+
+    useEffect(() => {
+      let svg = document.querySelector("#sprite .SelectedSVGEle");
+
+      if (svg) {
+        svg.style.zIndex = `${layer}`;
+      }
+    }, [layer]);
 
     useEffect(() => {
       let parentNodes = document.querySelectorAll("#Parent");

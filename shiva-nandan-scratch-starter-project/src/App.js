@@ -17,6 +17,11 @@ export default function App() {
   let backdropList = ["red", "blue", "green"];
   const [backdrop, setBackdrop] = useState();
 
+  let broadcastList = ["Hi", "Hello"];
+  const [broadcast, setBroadcast] = useState(null);
+
+  const [layer, setLayer] = useState(0);
+
   function dragDrop2(ev) {
     ev.preventDefault();
     //delete elements from midarea when dropped to sidebar section
@@ -194,9 +199,6 @@ export default function App() {
         );
       }
 
-      // const droppedEle = document.getElementById(data[0]).cloneNode(true);
-      // console.log("targetElementTS", targetElementTS);
-
       if (ParentIdSelector == "midarea") {
         var droppedEle = document.querySelector(
           `#midarea [data-ts="${data[1]}"]`
@@ -209,11 +211,15 @@ export default function App() {
         var droppedEle = document.querySelector(`[data-ts="${data[1]}"]`);
       } else if (ParentIdSelector == "Parent" && e.target.id == "Parent") {
         var droppedEle = document.querySelector(`[data-ts="${data[1]}"]`);
+      } else if (
+        ParentIdSelector == "Parent" &&
+        e.target.parentNode.id != "Parent"
+      ) {
+        var droppedEle = document.querySelector(`[data-ts="${data[1]}"]`);
       } else {
         var droppedEle = document
           .querySelector(`[data-ts="${data[1]}"]`)
           .cloneNode(true);
-        // console.log("dropped midarea cloneee");
       }
 
       function snapElements() {
@@ -227,16 +233,6 @@ export default function App() {
         createEle.style.top = e.clientY - 30 - createEle?.offsetHeight + "px";
         midarea.appendChild(createEle);
         createEle.appendChild(targetEle);
-        // console.log(
-        //   "snapelement",
-        //   e.clientX,
-        //   e.clientY,
-        //   createEle?.offsetWidth,
-        //   // e.offsetY,
-        //   createEle?.offsetHeight,
-        //   e.clientX - createEle?.offsetWidth,
-        //   e.clientY - createEle?.offsetHeight
-        // );
       }
 
       if (!(e.target.parentNode.id == "Parent" || e.target.id == "Parent")) {
@@ -261,7 +257,8 @@ export default function App() {
         droppedEle.id == "when" ||
         droppedEle.id == "this" ||
         droppedEle.id == "keyPress" ||
-        droppedEle.id == "WhenBackdropSwitchesTo"
+        droppedEle.id == "WhenBackdropSwitchesTo" ||
+        droppedEle.id == "whenIReceiveBroadcast"
       ) {
         let parentEle = e.target.parentNode;
         let parentTarget = e.target;
@@ -299,7 +296,8 @@ export default function App() {
         /> */}
         <div
           className="absolute left-2/3 top-1 w-8 h-5 bg-blue-200 rounded"
-          onClick={() => flagRef.current.flagClickHandler()}
+          // onClick={() => flagRef.current.flagClickHandler()}
+          id="flagDiv"
         >
           <Icon
             id="flag"
@@ -321,6 +319,9 @@ export default function App() {
             ParentIdSelector={ParentIdSelector}
             setParentIdSelector={setParentIdSelector}
             backdropList={backdropList}
+            broadcastList={broadcastList}
+            broadcast={broadcast}
+            setBroadcast={setBroadcast}
           />{" "}
           <MidArea
             // dragDrop2={dragDrop2}
@@ -337,6 +338,11 @@ export default function App() {
             backdropList={backdropList}
             backdrop={backdrop}
             setBackdrop={setBackdrop}
+            broadcastList={broadcastList}
+            broadcast={broadcast}
+            setBroadcast={setBroadcast}
+            layer={layer}
+            setLayer={setLayer}
           />
         </div>
 
@@ -346,6 +352,7 @@ export default function App() {
             setSpriteToggle={setSpriteToggle}
             dragStart={(event) => onDragStart(event)}
             dragDrop={dragDrop}
+            setLayer={setLayer}
           />
           <div className="w-4/12 h-1/3 text-black  absolute right-0 -bottom-5  rounded overflow-hidden border-solid border-black border-2 bg-white ">
             <SelectionArea />

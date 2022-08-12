@@ -84,7 +84,6 @@ function SelectionArea() {
       <div className={`z-100000 absolute w-14 h-20  -mt-1 -ml-1 `}></div>{" "}
       {/*bg-blue-400 */}
       <div className="flex justify-center items-center h-2/3">{sprite.SVG}</div>
-      {console.log("sprite.name", sprite.name)}
       <div className="text-medium border-t-solid border-t-white border-t-2 box-border bg-blue-400 p-0.5 w-auto text-center">
         {sprite.name.slice(0, -6)}
       </div>
