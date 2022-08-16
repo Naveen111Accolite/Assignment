@@ -37,6 +37,7 @@ const MidArea = forwardRef(
       setBroadcast,
       layer,
       setLayer,
+      setStop,
     },
     ref
   ) => {
@@ -45,6 +46,7 @@ const MidArea = forwardRef(
     const [x, setX, y, setY] = useContext(XandYValuesContext);
     const [selectedSVG, setSelectedSVG] = useContext(SelectedSVGContext);
     const [clonesprite, setClonesprite] = useContext(CloneSpriteContext);
+    const stop1 = useRef(false);
 
     function allowDrop(ev) {
       ev.preventDefault();
@@ -344,7 +346,7 @@ const MidArea = forwardRef(
           let previewArea = document.getElementById("sprite");
           setBackdrop(backdropValue.value);
 
-          previewArea.style.backgroundColor = `${backdropValue.value}`;
+          // previewArea.style.backgroundColor = `${backdropValue.value}`;
           await timeout(0.5);
           break;
         }
@@ -354,10 +356,10 @@ const MidArea = forwardRef(
 
           if (index != -1) {
             if (index < backdropList.length - 1) {
-              previewArea.style.backgroundColor = backdropList[index + 1];
+              // previewArea.style.backgroundColor = backdropList[index + 1];
               setBackdrop(backdropList[index + 1]);
             } else {
-              previewArea.style.backgroundColor = backdropList[0];
+              // previewArea.style.backgroundColor = backdropList[0];
               setBackdrop(backdropList[0]);
             }
           }
@@ -468,12 +470,6 @@ const MidArea = forwardRef(
         case "reset": {
           let sprite = document.querySelector("#sprite");
           var tooltip = document.getElementById("tooltip");
-          // var svg1 = document
-          //   .getElementById("sprite")
-          //   .getElementsByTagName("svg")[0];
-
-          // sprite.innerHTML = svg.outerHTML;
-          // sprite.innerHTML = svg.outerHTML;
           setClonesprite([]);
 
           setX(0);
@@ -482,11 +478,6 @@ const MidArea = forwardRef(
           setBackdrop(null);
 
           if (tooltip) tooltip.remove();
-
-          //reset size
-          // var svg1 = document
-          //   .getElementById("sprite")
-          //   .getElementsByTagName("svg")[0];
 
           let resetVal = 100;
 
@@ -504,6 +495,17 @@ const MidArea = forwardRef(
       }
     }
 
+    //to stop running
+    useEffect(() => {
+      if (stop) {
+        stop1.current = true;
+      } else {
+        stop1.current = false;
+      }
+    }, [stop]);
+
+    // if (stop1.current) return;
+
     ///executes each blocks one by one
     function switchFuncLoop(getIds) {
       let Ids = [];
@@ -517,6 +519,9 @@ const MidArea = forwardRef(
 
       (async function loop() {
         for (let i = 0; i < Ids.length; i++) {
+          // to stop running when 'red' stop button clicked
+          if (stop1.current) break;
+          //////////
           const switchfuncSetTimeout = await switchFunc(
             Ids[i]["id"],
             Ids[i]["timestamp"]
@@ -527,12 +532,10 @@ const MidArea = forwardRef(
 
     let midAreaClickHandler = (ev, targetid) => {
       let targetId = ev?.target?.id || targetid;
-
       if (ev.target.parentNode.id == "Parent" || targetId == "Parent") {
         let parentId =
           ev.target.parentNode.getAttribute("data-parent-ts") ||
           ev.target.getAttribute("data-parent-ts");
-        // let getIds = document.querySelectorAll("#Parent > div");
         let getIds = document.querySelectorAll(
           `[data-parent-ts="${parentId}"] > div`
         );
@@ -573,7 +576,7 @@ const MidArea = forwardRef(
       let previewArea = document.getElementById("sprite");
 
       previewArea.addEventListener("click", (e) => {
-        if (e.target.closest("svg").classList.contains("SelectedSVGEle")) {
+        if (e.target?.closest("svg")?.classList.contains("SelectedSVGEle")) {
           let thisSVGClick = document.querySelectorAll("#midarea #this");
           switchLoopHandler(thisSVGClick);
         }
@@ -593,14 +596,13 @@ const MidArea = forwardRef(
 
     //reset to it's original values when SVG element changed
     useEffect(() => {
-      let left = document.getElementById(selectedSVG).style.left;
-      let top = document.getElementById(selectedSVG).style.top;
+      let left = document.getElementById(selectedSVG)?.style.left;
+      let top = document.getElementById(selectedSVG)?.style.top;
       let angle = document
         .getElementById(selectedSVG)
-        .style.getPropertyValue("transform")
+        ?.style.getPropertyValue("transform")
         .split("rotate(")[1]
         ?.split("deg")[0];
-
       setX(left ? parseInt(left) : 0);
       setY(top ? parseInt(top) : 0);
 
@@ -609,6 +611,13 @@ const MidArea = forwardRef(
 
     //runs when backdrop changes
     useEffect(() => {
+      //changes backdrop color
+      let previewArea = document.getElementById("sprite");
+
+      previewArea.style.backgroundColor = backdrop;
+      console.log("backdrop changed to -", backdrop);
+
+      //checks and executes respective blocks when backdrop matches
       let backdropEvent = document.querySelectorAll(
         "#midarea #WhenBackdropSwitchesTo"
       );
@@ -647,7 +656,6 @@ const MidArea = forwardRef(
 
     useEffect(() => {
       let svg = document.querySelector("#sprite .SelectedSVGEle");
-
       if (svg) {
         svg.style.zIndex = `${layer}`;
       }

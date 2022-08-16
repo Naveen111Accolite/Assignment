@@ -16,6 +16,7 @@ export default function PreviewArea({
   dragStart,
   dragDrop,
   setLayer,
+  setStop,
 }) {
   const [turn15, setTurn] = useContext(Turn15ClockContext);
   const [move10, setMove10] = useContext(Move10StpesContext);
@@ -25,6 +26,7 @@ export default function PreviewArea({
   const [clonesprite, setClonesprite] = useContext(CloneSpriteContext);
 
   const [coord, setCoord] = useState({ x: 0, y: 0 });
+  const [dragging, setDragging] = useState(false);
 
   const spriteSvg = document.querySelector("#sprite > .SelectedSVGEle");
 
@@ -32,16 +34,14 @@ export default function PreviewArea({
     (ev) => {
       const spriteSvg = document.querySelector("#sprite > .SelectedSVGEle");
 
-      // console.log(turn15, "cccccturn15");
-      // const spriteSvg = document.querySelector("#sprite > .SelectedSVGEle");
-
       if (spriteSvg) {
         spriteSvg.style.position = "relative";
 
         spriteSvg.style.left = `${x}px`;
         spriteSvg.style.top = `${y}px`;
+
+        console.log(x, y, "x,y");
       }
-      // console.log(x, y, "x,y");
     },
     [x, y, turn15]
   );
@@ -65,7 +65,7 @@ export default function PreviewArea({
     if (spriteSvg) {
       spriteSvg.addEventListener("click", (e) => {
         if (e.target.closest(".SelectedSVGEle")) {
-          tooltipFunc("Hi there, did you call me?", 3);
+          // tooltipFunc("Hi there, did you call me?", 3);
         }
       });
 
@@ -74,12 +74,10 @@ export default function PreviewArea({
       sprite.addEventListener("dblclick", (e) => {
         //to set active element
         if (!e.target.closest(".SelectedSVGEle")) {
-          // console.log("e.target---", e.target.closest("svg"));
           let findOtherActiveSVG = document.querySelectorAll(
             "#sprite > .SelectedSVGEle"
           );
           let targetSVG = e.target.closest("svg");
-          // console.log("targetSVG", targetSVG.id, findOtherActiveSVG);
 
           if (findOtherActiveSVG) {
             for (let i = 0; i < findOtherActiveSVG.length; i++) {
@@ -87,10 +85,8 @@ export default function PreviewArea({
             }
           }
 
-          targetSVG.classList.add("SelectedSVGEle");
-          setSelectedSVG(targetSVG.id);
-          // console.log("targetSVG", targetSVG.id, findOtherActiveSVG);
-          // return;
+          targetSVG?.classList.add("SelectedSVGEle");
+          setSelectedSVG(targetSVG?.id);
         }
 
         let findALLOtherSVGContainingACTIVE =
@@ -103,65 +99,93 @@ export default function PreviewArea({
         });
 
         let setSVG = document.querySelector(`#allsprites #${selectedSVG}`);
-        setSVG.classList.add("activeSVG");
-
-        // console.log("e.target-22222--", e.target.closest("svg"));
+        setSVG?.classList.add("activeSVG");
       });
     }
   });
+
+  //when selected move to top layer
   useEffect(() => {
     setLayer((prev) => prev + 1);
   }, [selectedSVG]);
 
-  // useEffect(() => {
-  //   // window.onload = addListeners;
+  useEffect(
+    (evt) => {
+      // let svg = document.querySelector("#sprite > .SelectedSVGEle");
+      let svg = document.querySelector("#sprite ");
+      let svgAll = document.querySelectorAll("#sprite > svg");
 
-  //   const spriteSvg = document.querySelector("#sprite > svg");
-  //   if (spriteSvg) {
-  //     spriteSvg.addEventListener("mousedown", (evt) => {
-  //       spriteSvg.style.cursor = "move";
-  //       spriteSvg.classList.add("draggable");
-  //       makeDraggable(evt);
-  //     });
-  //   }
+      if (svg) {
+        var click = false; // flag to indicate when shape has been clicked
+        var clickX, clickY; // stores cursor location upon first click
+        var moveX = 0,
+          moveY = 0; // keeps track of overall transformation
+        var lastMoveX = 0,
+          lastMoveY = 0; // stores previous transformation (move)
 
-  //   var selectedElement = false;
-  //   function makeDraggable(evt) {
-  //     var svg = evt.target;
-  //     svg.addEventListener("mousedown", startDrag);
-  //     svg.addEventListener("mousemove", drag);
-  //     svg.addEventListener("mouseup", endDrag);
-  //     svg.addEventListener("mouseleave", endDrag);
-  //     // console.log(svg, "svg");
-  //     var selectedElement, offset;
-  //     function startDrag(evt) {
-  //       selectedElement = evt.target;
-  //     }
-  //     async function drag(evt) {
-  //       if (selectedElement) {
-  //         evt.preventDefault();
-  //         var coordVal = await getMousePosition(evt);
-  //         setCoord(coordVal);
-  //       }
-  //     }
-  //     function endDrag(evt) {
-  //       console.log("end dragg");
-  //       selectedElement = null;
-  //     }
-  //     function getMousePosition(evt) {
-  //       return {
-  //         x: evt.offsetX,
-  //         y: evt.offsetY,
-  //       };
-  //     }
-  //   }
-  // });
+        svg.addEventListener("mousedown", mouseDown);
 
-  // useEffect(() => {
-  //   setX(coord.x);
-  //   setY(coord.y);
-  //   console.log(coord);
-  // }, [coord]);
+        function mouseDown(evt) {
+          // let svg = document.querySelector("#sprite > .SelectedSVGEle");
+
+          evt.preventDefault(); // Needed for Firefox to allow dragging correctly
+          click = true;
+          clickX = evt.clientX;
+          clickY = evt.clientY;
+
+          let svgEle = evt?.target?.closest("svg");
+          let ActivesvgEle = svgEle?.classList.contains("SelectedSVGEle");
+
+          if (ActivesvgEle) svgEle.addEventListener("mousemove", move);
+          svg.addEventListener("mouseup", endMove);
+
+          for (let i = 0; i < svgAll.length; i++) {
+            svgAll[i].removeAttribute("transform");
+          }
+        }
+
+        function move(evt) {
+          evt.preventDefault();
+          if (click) {
+            moveX = evt.clientX - clickX;
+            moveY = evt.clientY - clickY;
+            let svgEle = evt?.target?.closest("svg");
+
+            let ActivesvgEle = svgEle?.classList.contains("SelectedSVGEle");
+
+            if (ActivesvgEle)
+              svgEle.setAttribute(
+                "transform",
+                "translate(" + moveX + "," + moveY + ")"
+              );
+          }
+        }
+
+        function endMove(evt) {
+          click = false;
+          lastMoveX = moveX;
+          lastMoveY = moveY;
+
+          let svgEle = evt?.target?.closest("svg");
+
+          let ActivesvgEle = svgEle?.classList.contains("SelectedSVGEle");
+
+          if (ActivesvgEle) {
+            svgEle.removeEventListener("mousemove", move);
+          }
+          svg.removeEventListener("mouseup", endMove);
+
+          for (let i = 0; i < svgAll.length; i++) {
+            svgAll[i].removeAttribute("transform");
+          }
+
+          setX(lastMoveX + x);
+          setY(lastMoveY + y);
+        }
+      }
+    },
+    [x, y]
+  );
 
   useEffect(() => {
     console.log("selectedSVG", selectedSVG);
@@ -176,7 +200,6 @@ export default function PreviewArea({
 
       let ele = document.getElementById(selectedSVG);
       if (ele) {
-        // console.log("ele", ele.id);
         ele.classList.add("SelectedSVGEle");
       }
     }
@@ -184,55 +207,14 @@ export default function PreviewArea({
     setActiveSVGEle();
   }, [selectedSVG]);
 
-  // function setActiveSVGEle(svg) {
-  //   let AllSVGs = document.querySelectorAll("#sprite > svg");
-  //   AllSVGs.forEach((ele) => {
-  //     if (ele.classList.contains("SelectedSVGEle")) {
-  //       ele.classList.remove("SelectedSVGEle");
-  //     }
-  //   });
-
-  //   let ele = document.getElementById(selectedSVG);
-  //   if (ele) {
-  //     console.log("ele", ele.id);
-  //     ele.classList.add("SelectedSVGEle");
-  //   }
-  // }
-
-  // let selectedSVGElement = spriteToggle ? <CatSprite /> : <BananaSprite />;
-  // let selectedSVGElement1 = function selectSVG() {
-  //   switch (selectedSVG) {
-  //     case "CatSprite": {
-  //       setActiveSVGEle();
-  //     }
-  //     case "BananaSprite": {
-  //       setActiveSVGEle();
-  //     }
-  //   }
-  // };
-
-  // function thisClickHandler(e) {
-  //   let thisClick = document.querySelectorAll("#midarea #this");
-
-  //   for (let i = 0; i < thisClick.length; i++) {
-  //     let parentTS = thisClick[i]?.parentNode.getAttribute("data-parent-ts");
-  //     let getIds = document.querySelectorAll(
-  //       `[data-parent-ts="${parentTS}"] > div`
-  //     );
-
-  //     switchFuncLoop(getIds);
-  //   }
-  // }
-
   return (
     <div
       onDrop={(event) => dragDrop(event)}
-      // onDragOver={(event) => allowDrop(event)}
       onDragStart={(event) => dragStart(event)}
       id="sprite"
       className="flex-none h-3/5 w-full overflow-y-auto p-2 rounded  "
+      onMouseDown={() => setStop(false)}
     >
-      {/* {selectedSVGElement1()} */}
       {<CatSprite />}
       {<BananaSprite />}
       {clonesprite}

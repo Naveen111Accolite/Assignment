@@ -11,7 +11,6 @@ function SelectionArea() {
     var svgAll = document
       .getElementById("allsprites")
       .getElementsByTagName("svg");
-    console.log("svgallllll", svgAll);
 
     if (svgAll) {
       for (let i = 0; i < svgAll.length; i++) {
@@ -29,15 +28,6 @@ function SelectionArea() {
   useEffect(() => {
     let selectSVG = document.getElementById("allsprites");
 
-    // if (selectedSVG == "CatSprite") {
-    //   //default class added
-    //   document.getElementById("CatSprite").classList.add("activeSVG");
-    // }
-
-    // selectSVG.addEventListener("load", () => {
-    //   document.getElementById("CatSprite").classList.add("activeSVG");
-    // });
-
     selectSVG.addEventListener("click", (ev) => {
       let findALLOtherSVGContainingACTIVE =
         document.querySelectorAll("#allsprites > div");
@@ -49,7 +39,7 @@ function SelectionArea() {
       });
 
       let setSVG = ev.target.parentNode;
-      setSVG.classList.add("activeSVG");
+      setSVG?.classList.add("activeSVG");
       setSelectedSVG(setSVG.id);
     });
   });
@@ -65,7 +55,7 @@ function SelectionArea() {
     });
 
     let setSVG = document.querySelector(`#allsprites #${selectedSVG}`);
-    setSVG.classList.add("activeSVG");
+    setSVG?.classList.add("activeSVG");
     //   setSelectedSVG(setSVG.id);
   }, [selectedSVG]);
 

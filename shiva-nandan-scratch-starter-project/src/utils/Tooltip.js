@@ -26,29 +26,18 @@ export default function tooltipFunc(value, timeInSecs) {
       tooltip.style.top = window.scrollY + iconPos.top - 20 + "px";
       tooltip.style.display = "block";
     }
-    console.log("iconPos", iconPos);
+    // console.log("iconPos", iconPos);
   }
   showTooltip();
 
-  const getPromise = (time) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(`Promise resolved for ${time}s`);
-      }, time);
-    });
-  };
-
   const setTimeoutPromise = () => {
     if (timeInSecs) {
-      return new Promise((resolve) =>
-        setTimeout(() => {
-          let tooltip = document.querySelector("#sprite #tooltip");
-          if (tooltip) {
-            tooltip.style.display = "none";
-          }
-          resolve();
-        }, timeInSecs * 1000)
-      );
+      setTimeout(() => {
+        let tooltip = document.querySelector("#sprite #tooltip");
+        if (tooltip) {
+          tooltip.style.display = "none";
+        }
+      }, timeInSecs * 1000);
     }
   };
   setTimeoutPromise();

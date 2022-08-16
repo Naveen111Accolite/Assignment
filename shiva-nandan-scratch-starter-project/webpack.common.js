@@ -43,6 +43,18 @@ module.exports = {
           },
         },
       },
+      {
+        test: /\.(png|jpe|mht?g|gif)$/i,
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              limit: 10000,
+              esModule: false,
+            },
+          },
+        ],
+      },
     ],
   },
   plugins: [new MiniCssExtractPlugin()],

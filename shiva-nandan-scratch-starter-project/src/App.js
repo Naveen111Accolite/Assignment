@@ -1,10 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import Sidebar from "./components/Sidebar";
 import MidArea from "./components/MidArea";
 import PreviewArea from "./components/PreviewArea";
 import ToggleSprite from "./components/ToggleSprite";
 import SelectionArea from "./components/SelectionArea";
 import Icon from "./components/Icon";
+import { XandYValuesContext } from "./context/XandYValuesProvider";
+import { Turn15ClockContext } from "./context/Turn15ClockProvider";
+import Modal from "./components/Modal";
+import snapElements from "./Instructions/snapele.png";
+// import images from "./images/images.jpg";
 
 export default function App() {
   const [spriteToggle, setSpriteToggle] = useState(true);
@@ -12,7 +17,11 @@ export default function App() {
   const [selectedElementAttr, setSelectedElementAttr] = useState();
   const [dragParent, setDragParent] = useState();
   const [stop, setStop] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const flagRef = useRef();
+
+  const [x, setX, y, setY] = useContext(XandYValuesContext);
+  const [turn15, setTurn] = useContext(Turn15ClockContext);
 
   let backdropList = ["red", "blue", "green"];
   const [backdrop, setBackdrop] = useState();
@@ -203,7 +212,7 @@ export default function App() {
         var droppedEle = document.querySelector(
           `#midarea [data-ts="${data[1]}"]`
         );
-        console.log("dropped midarea");
+        // console.log("dropped midarea");
       } else if (
         ParentIdSelector == "Parent" &&
         e.target.parentNode.id == "Parent"
@@ -279,39 +288,67 @@ export default function App() {
     }
   }
 
-  // function stopAll() {
-  //   console.log("stopAll");
-  //   setStop(true);
-  //   // setTimeout(() => {
-  //   //   setStop(false);
-  //   // }, 1000);
-  // }
+  function stopAll() {
+    var tooltip = document.getElementById("tooltip");
+
+    if (tooltip) tooltip.remove();
+    setStop(true);
+    return;
+  }
+
+  useEffect(() => {
+    document.addEventListener("mousedown", (e) => {
+      if (e.target.closest("div").id != "stop") {
+        setStop(false);
+      }
+    });
+  }, []);
 
   return (
     <div className="bg-blue-100 pt-6 font-sans">
       <div className="h-screen overflow-hidden flex flex-row  ">
+        {openModal && <Modal setOpenModal={setOpenModal} />}
+
         {/* <ToggleSprite
           spriteToggle={spriteToggle}
           setSpriteToggle={setSpriteToggle}
         /> */}
-        <div
-          className="absolute left-2/3 top-1 w-8 h-5 bg-blue-200 rounded"
-          // onClick={() => flagRef.current.flagClickHandler()}
-          id="flagDiv"
-        >
-          <Icon
-            id="flag"
-            name="flag"
-            size={20}
-            className="text-green-600 mx-2"
-          />
+        <div className="absolute flex top-1 right-1/4">
+          <div
+            className="bg-blue-200 rounded text-xs text-green-600 mx-2 px-2 my-0.5 cursor-pointer"
+            // onClick={() => flagRef.current.flagClickHandler()}
+            id="instruction"
+            onClick={() => setOpenModal((prev) => !prev)}
+          >
+            Instructions
+            <Icon
+              id="question"
+              name="question"
+              size={10}
+              className="text-green-600 mx-1 inline"
+            />
+          </div>
+          <div
+            className="rounded mx-2"
+            // onClick={() => flagRef.current.flagClickHandler()}
+            id="flagDiv"
+            // onMouseDown={() => setStop(false)}
+          >
+            <Icon
+              id="flag"
+              name="flag"
+              size={18}
+              className="text-green-600 mx-2"
+            />
+          </div>
+          <div
+            id="stop"
+            className=" right-1/4  top-1 w-auto h-5 bg-blue-200 rounded"
+            onClick={() => stopAll()}
+          >
+            <Icon id="stop" name="stop" size={18} className="text-red-600 " />
+          </div>
         </div>
-        {/* <div
-          className="absolute right-1/4 top-1 w-auto h-5 bg-blue-200 rounded"
-          onClick={() => stopAll()}
-        >
-          <Icon id="stop" name="stop" size={20} className="text-red-600 " />
-        </div> */}
         <div className="flex-1 h-screen overflow-hidden flex flex-row bg-white border-t border-r border-gray-200 rounded-tr-xl mr-2">
           <Sidebar
             dragStart={(event) => onDragStart(event)}
@@ -334,7 +371,6 @@ export default function App() {
             setParentIdSelector={setParentIdSelector}
             selectedElementAttr={selectedElementAttr}
             ref={flagRef}
-            stop={stop}
             backdropList={backdropList}
             backdrop={backdrop}
             setBackdrop={setBackdrop}
@@ -343,6 +379,8 @@ export default function App() {
             setBroadcast={setBroadcast}
             layer={layer}
             setLayer={setLayer}
+            stop={stop}
+            setStop={setStop}
           />
         </div>
 
@@ -353,6 +391,7 @@ export default function App() {
             dragStart={(event) => onDragStart(event)}
             dragDrop={dragDrop}
             setLayer={setLayer}
+            setStop={setStop}
           />
           <div className="w-4/12 h-1/3 text-black  absolute right-0 -bottom-5  rounded overflow-hidden border-solid border-black border-2 bg-white ">
             <SelectionArea />
